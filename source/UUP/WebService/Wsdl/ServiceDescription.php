@@ -27,6 +27,7 @@ namespace UUP\WebService\Wsdl;
 
 /**
  * SOAP service description (WSDL).
+ * 
  * @author Anders Lövgren (Nowise Systems)
  */
 class ServiceDescription
@@ -71,6 +72,11 @@ class ServiceDescription
          * @var array 
          */
         private $_classpath = array();
+        /**
+         * The class map for complex types.
+         * @var array 
+         */
+        private $_classmap = array();
 
         /**
          * Constructor.
@@ -165,10 +171,23 @@ class ServiceDescription
         public function getGenerator()
         {
                 if (!isset($this->_generator)) {
-                        $this->_generator = new Generator($this->_class, $this->_location, $this->_namespace);
-                        $this->_generator->setClassPath($this->_classpath);
-                        $this->_generator->discover();
+                        return $this->setGenerator();
+                } else {
+                        return $this->_generator;
                 }
+        }
+
+        /**
+         * Set service description generator.
+         * @return Generator
+         */
+        private function setGenerator()
+        {
+                $this->_generator = new Generator($this->_class, $this->_location, $this->_namespace);
+                $this->_generator->setClassPath($this->_classpath);
+                $this->_generator->setClassMap($this->_classmap);
+                $this->_generator->discover();
+
                 return $this->_generator;
         }
 
