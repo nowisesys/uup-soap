@@ -135,7 +135,7 @@ class SoapRequest
                 }
                 
                 if (!isset($handler)) {
-                        throw new RuntimeException("The SOAP service handler is unset");
+                        throw new RuntimeException("The SOAP service handler is unset.");
                 } else {
                         $service->setHandler($handler);
                 }

@@ -66,7 +66,7 @@ class Calculator implements SoapHandler
         public function divide($a, $b)
         {
                 if ($b == 0) {
-                        throw new InvalidArgumentException("Division by zero");
+                        throw new InvalidArgumentException("Division by zero.");
                 } else {
                         return $a / $b;
                 }
