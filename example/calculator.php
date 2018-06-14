@@ -23,9 +23,16 @@ use UUP\WebService\Soap\SoapRequest;
 use UUP\WebService\Soap\SoapService;
 use UUP\WebService\Soap\Wrapper\DocumentLiteral;
 
-$handler = new DocumentLiteral(new Calculator());
+// 
+// Create the SOAP service:
+// 
+$handler = new Calculator();
+$wrapper = new DocumentLiteral($handler);
 $service = new SoapService(Calculator::class);
-$service->setHandler($handler);
+$service->setHandler($wrapper);
 
+// 
+// Handle the SOAP request:
+// 
 $request = new SoapRequest();
 $request->process($service);
