@@ -93,20 +93,15 @@ class SoapService
          */
         protected $_handler;
         /**
-         * The service location.
-         * @var string
-         */
-        protected $_location;
-        /**
-         * The service namespace.
-         * @var string 
-         */
-        protected $_namespace;
-        /**
          * The WSDL schema directory.
          * @var string  
          */
         protected $_schemas;
+        /**
+         * The service description.
+         * @var ServiceDescription 
+         */
+        protected $_description;
 
         /**
          * Constructor.
@@ -117,34 +112,11 @@ class SoapService
         public function __construct($class, $location = null, $namespace = null)
         {
                 if (!extension_loaded('soap')) {
-                        throw new SoapFault("Receiver", "Server can't handle SOAP request.");
+                        throw new SoapFault("Receiver", "The SOAP extension is not loaded.");
                 }
 
-                if (is_object($class)) {
-                        $this->_handler = $class;
-                }
-
-                if (isset($this->_handler)) {
-                        $this->_class = get_class($this->_handler);
-                } else {
-                        $this->_class = $class;
-                }
-
-                if (!isset($location) || !isset($namespace)) {
-                        $action = new SoapAction();
-                }
-
-                if (isset($location)) {
-                        $this->_location = $location;
-                } else {
-                        $this->_location = $action;
-                }
-
-                if (isset($namespace)) {
-                        $this->_namespace = $namespace;
-                } else {
-                        $this->_namespace = $action;
-                }
+                $this->setServiceClass($class);
+                $this->setServiceDescription($location, $namespace);
         }
 
         /**
@@ -153,7 +125,8 @@ class SoapService
          */
         public function setLocation($location)
         {
-                $this->_location = $location;
+                $description = $this->_description;
+                $description->setServiceLocation($location);
         }
 
         /**
@@ -162,7 +135,8 @@ class SoapService
          */
         public function setNamespace($namespace)
         {
-                $this->_namespace = $namespace;
+                $description = $this->_description;
+                $description->setNamespace($namespace);
         }
 
         /**
@@ -197,7 +171,7 @@ class SoapService
          */
         public function sendDescription()
         {
-                $description = $this->getServiceDescription();
+                $description = $this->_description;
                 $description->send(ServiceDescription::FORMAT_XML);
         }
 
@@ -206,8 +180,54 @@ class SoapService
          */
         public function sendDocumentation()
         {
-                $description = $this->getServiceDescription();
+                $description = $this->_description;
                 $description->send(ServiceDescription::FORMAT_HTML);
+        }
+
+        /**
+         * Set service class.
+         * @param string|object $class The service class.
+         */
+        private function setServiceClass($class)
+        {
+                if (is_object($class)) {
+                        $this->_handler = $class;
+                }
+
+                if (isset($this->_handler)) {
+                        $this->_class = get_class($this->_handler);
+                } else {
+                        $this->_class = $class;
+                }
+        }
+
+        /**
+         * Set service description.
+         * 
+         * @param string $location The service location.
+         * @param string $namespace The service namespace.
+         */
+        private function setServiceDescription($location, $namespace)
+        {
+                if (!isset($location) || !isset($namespace)) {
+                        $action = new SoapAction();
+                }
+
+                $description = new ServiceDescription($this->_class);
+
+                if (isset($location)) {
+                        $description->setServiceLocation($location);
+                } else {
+                        $description->setServiceLocation($action);
+                }
+
+                if (isset($namespace)) {
+                        $description->setNamespace($namespace);
+                } else {
+                        $description->setNamespace($action);
+                }
+
+                $this->_description = $description;
         }
 
         /**
@@ -216,9 +236,7 @@ class SoapService
          */
         public function getServiceDescription()
         {
-                $description = new ServiceDescription($this->_class, $this->_location, $this->_namespace);
-                $description->setNamespace($this->_namespace);
-                return $description;
+                return $this->_description;
         }
 
         /**
@@ -250,7 +268,7 @@ class SoapService
          */
         public function handleRequest()
         {
-                $description = $this->getServiceDescription();
+                $description = $this->_description;
 
                 // 
                 // Create cached service description:
@@ -265,9 +283,9 @@ class SoapService
                 // Set URI of service description:
                 // 
                 if ($filename != null && file_exists($filename)) {
-                        $this->_description = $filename;
+                        $descURI = $filename;
                 } else {
-                        $this->_description = $this->_location . '?wsdl';
+                        $descURI = $description->getServiceLocation() . '?wsdl';
                 }
 
                 // 
@@ -281,8 +299,8 @@ class SoapService
                 // Use SOAP document/literal mode:
                 // 
                 $options = array(
-                        'uri'      => $this->_description,
-                        'location' => $this->_location,
+                        'uri'      => $descURI,
+                        'location' => $description->getServiceLocation(),
                         'style'    => SOAP_DOCUMENT,
                         'use'      => SOAP_LITERAL,
                         'classmap' => $description->getGenerator()->getClassMap()
@@ -291,7 +309,7 @@ class SoapService
                 // 
                 // Create SOAP server using WSDL mode:
                 // 
-                $server = new SoapServer($this->_description, $options);
+                $server = new SoapServer($descURI, $options);
 
                 // 
                 // Handle request using handler object (if set) or the SOAP
