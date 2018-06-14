@@ -1,0 +1,70 @@
+=============================================================================
+    UUP-SOAP - PHP classes as SOAP services.
+=============================================================================
+
+Export your PHP classes as SOAP services with automatic service documentation gathered 
+from annotations on class, methods and parameters and availible for service consumer thru 
+wsdl:documentation tags.
+
+Features:
+
+    o) Uses the native SOAP extension (fast).
+    o) Web service description (WSDL).
+    o) Web service API documentation (HTML).
+
+** INTRODUCTION:
+
+    The exported service is either the class name or an object. The latter is is prefered in
+    case some special initialization has to be done. The parameter processing (i.e. detect if
+    WSDL mode) can be simplified by using the SOAP request class:
+
+        public function response($request, $service)
+        {
+            $request->process($service);            // Request mode detected
+        }
+
+    Or more more detailed where the $request is either some custom class or the one supplied
+    by this library:
+
+        public function response($request, $service)
+        {
+            switch ($request->target) {
+                case 'soap':
+                    $service->handleRequest();      // Handle SOAP request
+                    break;
+                case 'wsdl':
+                    $service->sendDescription();    // Send WSDL
+                    break;
+                case 'docs':
+                    $service->sendDocumentation();  // Send API doc
+                    break;
+            }
+        }
+
+** TESTING:
+
+    Heres an example on generating a SOAP proxy in Java:
+
+        bash$> mkdir source classes
+        bash$> wsimport -s source -d classes -p calculator -keep \
+                    http://localhost/uup-soap/calculator.php?wsdl
+
+    The full source code including a makefile can be found in the example/java directory.
+
+** ABOUT DERIVED WORK:
+
+    The WSDL generation uses the WSDL_Gen class (its author is unknown), but was republished
+    by Martin Goldhahn (mgoldhahn@gmail.com) on Google Code. The license for php-wsdl-generator 
+    that bundles that class is Apache 2.0 (same as this package license). A number of improvements
+    has been done on that class (see file header).
+
+    Related links:
+
+        1. http://web.archive.org/web/* 
+        2. http://www.schlossnagle.org/~george/php/WSDL_Gen.tgz
+        3. http://code.google.com/p/php-wsdl-generator/downloads
+
+    The other code was taken from the OpenExam project (openexam.io), relicensed from GPL2
+    as Apache 2.0
+
+// Anders Lövgren, 2018-06-12

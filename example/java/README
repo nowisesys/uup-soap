@@ -1,0 +1,27 @@
+
+    =========================================
+     Sample SOAP clients written in Java. 
+    =========================================
+
+Instructions for the calculator client, the same procedure applies to all clients.
+
+1. Start by creating the proxy directory:
+
+    bash$> mkdir classes source
+
+2. Generate proxy using wsimport and compile client:
+
+    bash$> wsimport -d classes -s source -p calculator http://localhost/uup-soap/calculator.php?wsdl
+    bash$> javac -cp classes -encoding UTF-8 client/Calculator.java
+
+3. Append class path when running test driver:
+
+    bash$> java -cp classes:. client.Calculator
+
+4. Cleanup when done:
+
+    bash$> rm -rf classes source
+    bash$> find -type f -name *.class | xargs rm
+
+
+// Anders Lövren, 2018-06-14

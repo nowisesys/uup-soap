@@ -15,7 +15,8 @@
     "require": {},
     "autoload": {
         "psr-0": {
-            "UUP\\": "source"
+            "UUP\\": "source",
+            "Extern\\": "source"
         }
     }
 }
