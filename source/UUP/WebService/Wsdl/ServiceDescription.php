@@ -42,14 +42,22 @@ class ServiceDescription
         const FORMAT_XML = 'xml';
 
         /**
+         * The SOAP service class.
          * @var string 
          */
         private $_class;
         /**
+         * The SOAP service location (URL).
          * @var string 
          */
         private $_location;
         /**
+         * The SOAP service document (file or URL).
+         * @var string 
+         */
+        private $_document;
+        /**
+         * The SOAP service namespace.
          * @var string 
          */
         private $_namespace;
@@ -106,6 +114,24 @@ class ServiceDescription
         }
 
         /**
+         * Ser SOAP service document (file or URL).
+         * @param string $location The service document.
+         */
+        public function setServiceDocument($location)
+        {
+                $this->_document = $location;
+        }
+
+        /**
+         * Get SOAP service document (file or URL).
+         * @return string
+         */
+        public function getServiceDocument()
+        {
+                return $this->_document;
+        }
+
+        /**
          * Set SOAP service location (endpoint).
          * @param string $location
          */
@@ -115,21 +141,21 @@ class ServiceDescription
         }
 
         /**
-         * Set SOAP service namespace.
-         * @param string $namespace
-         */
-        public function setNamespace($namespace)
-        {
-                $this->_namespace = $namespace;
-        }
-
-        /**
          * Get SOAP service location (endpoint)
          * @return string
          */
         public function getServiceLocation()
         {
                 return $this->_location;
+        }
+
+        /**
+         * Set SOAP service namespace.
+         * @param string $namespace
+         */
+        public function setNamespace($namespace)
+        {
+                $this->_namespace = $namespace;
         }
 
         /**

@@ -269,6 +269,7 @@ class SoapService
         public function handleRequest()
         {
                 $description = $this->_description;
+                $generator = $description->getGenerator();
 
                 // 
                 // Create cached service description:
@@ -283,9 +284,10 @@ class SoapService
                 // Set URI of service description:
                 // 
                 if ($filename != null && file_exists($filename)) {
-                        $descURI = $filename;
+                        $description->setServiceDocument($filename);
                 } else {
-                        $descURI = $description->getServiceLocation() . '?wsdl';
+                        $filename = $description->getServiceLocation() . '?wsdl';
+                        $description->setServiceDocument($filename);
                 }
 
                 // 
@@ -299,17 +301,17 @@ class SoapService
                 // Use SOAP document/literal mode:
                 // 
                 $options = array(
-                        'uri'      => $descURI,
+                        'uri'      => $description->getServiceDocument(),
                         'location' => $description->getServiceLocation(),
                         'style'    => SOAP_DOCUMENT,
                         'use'      => SOAP_LITERAL,
-                        'classmap' => $description->getGenerator()->getClassMap()
+                        'classmap' => $generator->getClassMap()
                 );
 
                 // 
                 // Create SOAP server using WSDL mode:
                 // 
-                $server = new SoapServer($descURI, $options);
+                $server = new SoapServer($description->getServiceDocument(), $options);
 
                 // 
                 // Handle request using handler object (if set) or the SOAP
