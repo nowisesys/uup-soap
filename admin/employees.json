@@ -1,0 +1,49 @@
+{
+    "adam": {
+        "name": "Adam Svensson",
+        "company": {
+            "name": "Blomsterhandeln AB",
+            "address": "Lundagatan 12B, Uppsala"
+        },
+        "job": {
+            "title": "florist",
+            "salary": 27480
+        },
+        "boss": "carl"
+    },
+    "eva": {
+        "name": "Eva Marklund",
+        "company": {
+            "name": "Blomsterhandeln AB",
+            "address": "Lundagatan 12B, Uppsala"
+        },
+        "job": {
+            "title": "florist",
+            "salary": 28950
+        },
+        "boss": "carl"
+    },
+    "carl": {
+        "name": "Carl Oscar Erlinder",
+        "company": {
+            "name": "Blomsterhandeln AB",
+            "address": "Lundagatan 12B, Uppsala"
+        },
+        "job": {
+            "title": "boss",
+            "salary": 33270
+        }
+    },
+    "ev2": {
+        "name": "Eva Marklund",
+        "company": {
+            "name": "Elgiganten",
+            "address": "Kungens Kurva, Stockholm"
+        },
+        "job": {
+            "title": "salesmen",
+            "salary": 29825
+        },
+        "boss": "karin"
+    }
+}

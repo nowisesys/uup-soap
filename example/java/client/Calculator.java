@@ -22,7 +22,7 @@
  */
 package client;
 
-import calculator.*;
+import calculator.generated.*;
 
 /**
  * Test driver for the calculator service.

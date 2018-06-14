@@ -43,13 +43,10 @@ Features:
 
 ** TESTING:
 
-    Heres an example on generating a SOAP proxy in Java:
+    Example Java files can be found in the example/java/client directory. Generate SOAP proxy
+    using wsimport or download the full project from:
 
-        bash$> mkdir source classes
-        bash$> wsimport -s source -d classes -p calculator -keep \
-                    http://localhost/uup-soap/calculator.php?wsdl
-
-    The full source code including a makefile can be found in the example/java directory.
+        http://it.bmc.uu.se/andlov/php/uup-soap/java
 
 ** ABOUT DERIVED WORK:
 
@@ -66,5 +63,6 @@ Features:
 
     The other code was taken from the OpenExam project (openexam.io), relicensed from GPL2
     as Apache 2.0
+
 
 // Anders Lövgren, 2018-06-12
