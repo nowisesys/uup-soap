@@ -119,6 +119,26 @@ class WSDL_Gen
         }
 
         /**
+         * Set class map.
+         * 
+         * The class map is used to map between XSD complex types and PHP. For example, 
+         * if an class is aliased, then use the class map for resolving the alias to 
+         * real class.
+         * 
+         * <code>
+         * $generator->setClassMap(array(
+         *      'EmployeeList' => 'Employees'
+         * ));
+         * </code>
+         * 
+         * @param array $map
+         */
+        public function setClassMap($map)
+        {
+                $this->classMap = $map;
+        }
+
+        /**
          * Get map between XSD complex types and PHP classes.
          * @return array
          */
@@ -144,6 +164,9 @@ class WSDL_Gen
                 foreach ($methods as $method) {
                         if ($method->isConstructor()) {
                                 continue;       // Skip constructor
+                        }
+                        if ($method->isDestructor()) {
+                                continue;       // Skip destructor                                
                         }
                         if ($method->isPublic() == false) {
                                 continue;       // Skip non-public
@@ -230,22 +253,47 @@ class WSDL_Gen
                 $this->types['array'] = array('name' => 'array', 'ns' => $this->ns);
         }
 
-        protected function addComplexType($className)
+        private function getReflectionClass($className)
         {
-                if (strpos($className, '\\') == false) {
-                        foreach ($this->classPath as $path) {
-                                try {
-                                        $class = new ReflectionClass($path . '\\' . $className);
-                                        break;
-                                } catch (ReflectionException $exception) {
-                                        // ignore
-                                }
+                // 
+                // Get aliased class:
+                // 
+                if (isset($this->classMap[$className])) {
+                        $className = $this->classMap[$className];
+                }
+
+                // 
+                // Create reflection on fully qualified class:
+                // 
+                if (strpos($className, '\\')) {
+                        return new ReflectionClass($className);
+                }
+
+                // 
+                // Use class pathes in reflection:
+                // 
+                foreach ($this->classPath as $path) {
+                        try {
+                                $class = new ReflectionClass($path . '\\' . $className);
+                                return $class;
+                        } catch (ReflectionException $exception) {
+                                // ignore
                         }
                 }
 
-                if (!isset($class)) {
-                        $class = new ReflectionClass($className);
+                // 
+                // Reflection has failed:
+                // 
+                if ($className == 'type') {
+                        throw new ReflectionException("Got class named 'type', please check @params or @return in method documentation.");
+                } else {
+                        throw new ReflectionException("Failed reflection on class $className (maybe missing in class map or path).");
                 }
+        }
+
+        protected function addComplexType($className)
+        {
+                $class = $this->getReflectionClass($className);
 
                 $this->complexTypes[$className] = array();
                 if (($str = strrchr($className, '\\'))) {

@@ -92,6 +92,36 @@ class ServiceDescription
         }
 
         /**
+         * Add alias (use) to class map.
+         * 
+         * <code>
+         * $description->addClassMap('EmployeeList', 'Employees');
+         * </code>
+         * 
+         * @param string $alias The class alias.
+         * @param string $class The class name.
+         */
+        public function addClassMap($alias, $class)
+        {
+                $this->_classmap[$alias] = $class;
+        }
+        
+        /**
+         * Set class map.
+         * 
+         * <code>
+         * $description->setClassMap(array(
+         *      'EmployeeList' => 'Employees'
+         * ));
+         * </code>
+         * 
+         * @param array $map The class map.
+         */
+        public function setClassMap($map) {
+                $this->_classmap = $map;
+        }
+        
+        /**
          * Append namespace to class path.
          * 
          * The class path is an array of namespaces used when loading classes that
