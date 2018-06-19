@@ -36,7 +36,7 @@ $service->setHandler($wrapper);
 // 
 $description = $service->getServiceDescription();
 $description->addClassPath("UUP\WebService\Example\Types");
-$description->addClassMap('EmployeeList', 'Employees');
+$description->addClassMap('EmployeeList', 'Employees');         // Class alias example
 
 // 
 // Handle the SOAP request:
