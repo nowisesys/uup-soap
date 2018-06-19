@@ -19,9 +19,9 @@
 namespace UUP\WebService\Example;
 
 use RuntimeException;
+use UUP\WebService\Example\Storage\Employees as EmployeeStore;
 use UUP\WebService\Example\Types\Company;
 use UUP\WebService\Example\Types\Employee;
-use UUP\WebService\Example\Types\Employees as EmployeeList;
 use UUP\WebService\Example\Types\Job;
 use UUP\WebService\Soap\SoapHandler;
 
@@ -40,7 +40,7 @@ class Employees implements SoapHandler
 
         /**
          * The employees list.
-         * @var EmployeeList 
+         * @var EmployeeStore 
          */
         private $_employees;
 
@@ -69,7 +69,7 @@ class Employees implements SoapHandler
                             file_get_contents("/tmp/employees.dat")
                         );
                 } else {
-                        $this->_employees = new EmployeeList(
+                        $this->_employees = new EmployeeStore(
                             json_decode(
                                 file_get_contents("$root/admin/employees.json")
                             )
@@ -87,11 +87,11 @@ class Employees implements SoapHandler
 
         /**
          * Get all employees.
-         * @return EmployeeList
+         * @return Employee[]
          */
         public function dumpEmployees()
         {
-                return $this->_employees;
+                return $this->_employees->getAll();
         }
 
         /**
