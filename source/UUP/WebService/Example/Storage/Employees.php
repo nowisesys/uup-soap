@@ -16,13 +16,16 @@
  * limitations under the License.
  */
 
-namespace UUP\WebService\Example\Types;
+namespace UUP\WebService\Example\Storage;
 
-use JsonSerializable;
 use RuntimeException;
+use UUP\WebService\Example\Types\Employee;
 
 /**
- * The employees list.
+ * The employees store.
+ * 
+ * This class is a simple dropin replacement for an database where we
+ * normally choose to store employee records.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
