@@ -171,9 +171,8 @@ class SoapService
          */
         public function sendDescription()
         {
-                header('Content-Type: application/wsdl+xml');
                 $description = $this->_description;
-                $description->send(ServiceDescription::FORMAT_XML);
+                $description->send(ServiceDescription::FORMAT_WSDL);
         }
 
         /**

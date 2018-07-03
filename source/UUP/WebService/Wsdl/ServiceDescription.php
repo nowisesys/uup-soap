@@ -25,6 +25,15 @@
 
 namespace UUP\WebService\Wsdl;
 
+use InvalidArgumentException;
+use UUP\WebService\Wsdl\Format\DocumentFormatter;
+use UUP\WebService\Wsdl\Format\Generator\HtmlContent as HtmlContentFormatter;
+use UUP\WebService\Wsdl\Format\Generator\HtmlDocument as HtmlDocumentFormatter;
+use UUP\WebService\Wsdl\Format\Generator\SimpleDocument as SimpleDocumentFormatter;
+use UUP\WebService\Wsdl\Format\Generator\WsdlDocument as WsdlDocumentFormatter;
+use UUP\WebService\Wsdl\Format\Transformer\CodeDocument as CodeDocumentFormatter;
+use UUP\WebService\Wsdl\Format\Transformer\XsltStylesheet as XsltStylesheetFormatter;
+
 /**
  * SOAP service description (WSDL).
  * 
@@ -34,13 +43,29 @@ class ServiceDescription
 {
 
         /**
-         * Format output as HTML.
+         * Format output as WSDL (XML).
+         */
+        const FORMAT_WSDL = 'wsdl';
+        /**
+         * Format output as complete HTML document.
          */
         const FORMAT_HTML = 'html';
         /**
-         * Format output as XML.
+         * Format output as HTML body content.
          */
-        const FORMAT_XML = 'xml';
+        const FORMAT_BODY = 'body';
+        /**
+         * Format WSDL as HTML using XSLT processing and slylesheet.
+         */
+        const FORMAT_XSLT = 'xslt';
+        /**
+         * Format as HTML warpped in pre/code tags.
+         */
+        const FORMAT_CODE = 'code';
+        /**
+         * Format as simple HTML (raw).
+         */
+        const FORMAT_SIMPLE = 'simple';
 
         /**
          * The SOAP service class.
@@ -235,38 +260,61 @@ class ServiceDescription
                 switch ($format) {
                         case self::FORMAT_HTML:
                                 return $document->saveHTML();
-                        case self::FORMAT_XML:
-                                return $document->saveXML();
+                        case self::FORMAT_WSDL:
+//                                return $document->saveXML();
                 }
         }
 
         /**
-         * Get service description (WSDL).
-         * @param string $format The output format (html or xml).
-         * @return string
+         * Get content formatter.
+         * @param string $format The output format (see FORMAT_XXX constants).
+         * @return DocumentFormatter
          */
-        public function dump($format = self::FORMAT_XML)
+        private function getFormatter($format)
         {
-                return $this->getDescription($format);
+                return new CodeDocumentFormatter();
+
+                switch ($format) {
+                        case self::FORMAT_BODY:
+                                return new HtmlContentFormatter();
+                        case self::FORMAT_HTML:
+                                return new HtmlDocumentFormatter();
+                        case self::FORMAT_WSDL:
+                                return new WsdlDocumentFormatter();
+                        case self::FORMAT_XSLT:
+                                return new XsltStylesheetFormatter();
+                        case self::FORMAT_CODE:
+                                return new CodeDocumentFormatter();
+                        case self::FORMAT_SIMPLE:
+                                return new SimpleDocumentFormatter();
+                        default:
+                                throw new InvalidArgumentException("Unknown output format $format");
+                }
         }
 
         /**
          * Send service description (WSDL) to stdout.
-         * @param string $format The output format (html or xml).
+         * @param string $format The output format (see FORMAT_XXX constants).
          */
-        public function send($format = self::FORMAT_XML)
+        public function send($format = self::FORMAT_WSDL)
         {
-                echo $this->getDescription($format);
+                $generator = $this->getGenerator();
+                $formatter = $this->getFormatter($format);
+
+                $formatter->send($generator);
         }
 
         /**
          * Save service description (WSDL) to file.
          * @param string $filename The destination file.
-         * @param string $format The output format (html or xml).
+         * @param string $format The output format (see FORMAT_XXX constants).
          */
-        public function save($filename, $format = self::FORMAT_XML)
+        public function save($filename, $format = self::FORMAT_WSDL)
         {
-                file_put_contents($filename, $this->getDescription($format));
+                $generator = $this->getGenerator();
+                $formatter = $this->getFormatter($format);
+
+                $formatter->save($generator, $filename);
         }
 
 }
