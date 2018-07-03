@@ -105,7 +105,7 @@ class ServiceDescription
         {
                 $this->_classmap[$alias] = $class;
         }
-        
+
         /**
          * Set class map.
          * 
@@ -117,10 +117,11 @@ class ServiceDescription
          * 
          * @param array $map The class map.
          */
-        public function setClassMap($map) {
+        public function setClassMap($map)
+        {
                 $this->_classmap = $map;
         }
-        
+
         /**
          * Append namespace to class path.
          * 
@@ -253,7 +254,7 @@ class ServiceDescription
          * Send service description (WSDL) to stdout.
          * @param string $format The output format (html or xml).
          */
-        public function send($format = self::FORMAT_HTML)
+        public function send($format = self::FORMAT_XML)
         {
                 echo $this->getDescription($format);
         }
