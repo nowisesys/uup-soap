@@ -282,7 +282,14 @@ class CodeDocument implements DocumentFormatter
                 $body->setAttribute("xmlns", $generator->ns);
                 $envelop->appendChild($body);
 
-                $return = $body->appendChild(new DomElement($name));
+                error_log("NAME: $name");
+
+                if (count($data['output']) == 0) {
+                        $method = $body->appendChild(new DomElement($name));
+                        $return = $method->appendChild(new DomElement("return"));
+                } else {
+                        $return = $body->appendChild(new DomElement($name));
+                }
 
                 foreach ($data['output'] as $type) {
                         $this->addParameter($generator, $return, $type['name'], $type['type']);
