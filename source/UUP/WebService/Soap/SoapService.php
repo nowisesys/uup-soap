@@ -177,11 +177,12 @@ class SoapService
 
         /**
          * Send HTML documentation for the SOAP service.
+         * @param string $format The documentation format (one of the ServiceDescription::FORMAT_XXX constants).
          */
-        public function sendDocumentation()
+        public function sendDocumentation($format = ServiceDescription::FORMAT_HTML)
         {
                 $description = $this->_description;
-                $description->send(ServiceDescription::FORMAT_HTML);
+                $description->send($format);
         }
 
         /**

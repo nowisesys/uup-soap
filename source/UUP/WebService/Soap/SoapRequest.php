@@ -19,6 +19,7 @@
 namespace UUP\WebService\Soap;
 
 use RuntimeException;
+use UUP\WebService\Wsdl\ServiceDescription;
 
 /**
  * Detect and handle SOAP service request.
@@ -77,6 +78,11 @@ class SoapRequest
          * @var string 
          */
         private $_target = self::TARGET_SOAP;
+        /**
+         * The documentation format.
+         * @var string 
+         */
+        private $_format;
 
         /**
          * Constructor.
@@ -94,6 +100,7 @@ class SoapRequest
                 if (filter_has_var(INPUT_GET, self::TARGET_DOCS) ||
                     filter_has_var(INPUT_POST, self::TARGET_DOCS)) {
                         $this->_target = self::TARGET_DOCS;
+                        $this->_format = filter_input(INPUT_GET, self::TARGET_DOCS);
                 }
                 if (filter_has_var(INPUT_GET, self::TARGET_SOAP) ||
                     filter_has_var(INPUT_POST, self::TARGET_SOAP)) {
@@ -113,7 +120,10 @@ class SoapRequest
                                 $this->_target = self::TARGET_SOAP;
                         }
                 }
-                
+
+                if (!isset($this->_format)) {
+                        $this->_format = ServiceDescription::FORMAT_HTML;
+                }
         }
 
         public function __get($name)
@@ -133,7 +143,7 @@ class SoapRequest
                 if (!isset($handler)) {
                         $handler = $service->getHandler();
                 }
-                
+
                 if (!isset($handler)) {
                         throw new RuntimeException("The SOAP service handler is unset.");
                 } else {
@@ -142,7 +152,7 @@ class SoapRequest
 
                 switch ($this->_target) {
                         case self::TARGET_DOCS:
-                                $service->sendDocumentation();
+                                $service->sendDocumentation($this->_format);
                                 break;
                         case self::TARGET_WSDL:
                                 $service->sendDescription();
