@@ -244,32 +244,12 @@ class ServiceDescription
         }
 
         /**
-         * Get service description (WSDL).
-         * @param string $format The output format (html or xml).
-         * @return string
-         */
-        private function getDescription($format)
-        {
-                $generator = $this->getGenerator();
-                $document = $generator->getDocument();
-
-                switch ($format) {
-                        case self::FORMAT_HTML:
-                                return $document->saveHTML();
-                        case self::FORMAT_WSDL:
-//                                return $document->saveXML();
-                }
-        }
-
-        /**
          * Get content formatter.
          * @param string $format The output format (see FORMAT_XXX constants).
          * @return DocumentFormatter
          */
         private function getFormatter($format)
         {
-                return new CodeDocumentFormatter();
-
                 switch ($format) {
                         case self::FORMAT_HTML:
                                 return new HtmlDocumentFormatter();
