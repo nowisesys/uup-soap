@@ -87,7 +87,12 @@ class CodeDocument implements DocumentFormatter
         }
 
         /**
-         * Get HTML body content.
+         * Get unprocessed content.
+         * 
+         * Call this method to access unwrapped content. This could be useful for
+         * accessing i.e. HTML content that is output inside document tags by the
+         * send() and save() methods.
+         * 
          * @param Generator $generator The WSDL generator.
          * @return string
          */

@@ -51,4 +51,20 @@ class WsdlDocument implements DocumentFormatter
                 $document->save($filename);
         }
 
+        /**
+         * Get unprocessed content.
+         * 
+         * Call this method to access unwrapped content. This could be useful for
+         * accessing i.e. HTML content that is output inside document tags by the
+         * send() and save() methods.
+         * 
+         * @param Generator $generator The WSDL generator.
+         * @return string
+         */
+        public function getContent($generator): string
+        {
+                $document = $generator->getDocument();
+                return $document->saveXML();
+        }
+
 }

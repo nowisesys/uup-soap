@@ -61,7 +61,7 @@ class XsltStylesheet implements DocumentFormatter
          */
         function send($generator)
         {
-                echo $this->getDocument($generator);
+                echo $this->getContent($generator);
         }
 
         /**
@@ -71,15 +71,20 @@ class XsltStylesheet implements DocumentFormatter
          */
         function save($generator, $filename)
         {
-                file_put_contents($filename, $this->getDocument($generator));
+                file_put_contents($filename, $this->getContent($generator));
         }
 
         /**
-         * Get HTML document.
+         * Get unprocessed content.
+         * 
+         * Call this method to access unwrapped content. This could be useful for
+         * accessing i.e. HTML content that is output inside document tags by the
+         * send() and save() methods.
+         * 
          * @param Generator $generator The WSDL generator.
-         * @return string 
+         * @return string
          */
-        private function getDocument($generator)
+        public function getContent($generator): string
         {
                 $document = $generator->getDocument();
 

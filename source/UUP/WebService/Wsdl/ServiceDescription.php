@@ -51,15 +51,11 @@ class ServiceDescription
          */
         const FORMAT_HTML = 'html';
         /**
-         * Format output as HTML body content.
-         */
-        const FORMAT_BODY = 'body';
-        /**
          * Format WSDL as HTML using XSLT processing and slylesheet.
          */
         const FORMAT_XSLT = 'xslt';
         /**
-         * Format as HTML warpped in pre/code tags.
+         * Transform wsdl:xxx, xsd:xxx and soap-env:xxx -> div class="xxx" HTML.
          */
         const FORMAT_CODE = 'code';
         /**
@@ -275,8 +271,6 @@ class ServiceDescription
                 return new CodeDocumentFormatter();
 
                 switch ($format) {
-                        case self::FORMAT_BODY:
-                                return new HtmlContentFormatter();
                         case self::FORMAT_HTML:
                                 return new HtmlDocumentFormatter();
                         case self::FORMAT_WSDL:

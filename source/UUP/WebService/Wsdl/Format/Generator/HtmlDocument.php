@@ -18,6 +18,7 @@
 
 namespace UUP\WebService\Wsdl\Format\Generator;
 
+use UUP\WebService\Wsdl\Format\DocumentFormatter;
 use UUP\WebService\Wsdl\Generator;
 
 /**
@@ -25,7 +26,7 @@ use UUP\WebService\Wsdl\Generator;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class HtmlDocument extends HtmlContent
+class HtmlDocument implements DocumentFormatter
 {
 
         /**
@@ -43,6 +44,21 @@ class HtmlDocument extends HtmlContent
          * @param string $filename The filename.
          */
         function save($generator, $filename)
+        {
+                
+        }
+
+        /**
+         * Get unprocessed content.
+         * 
+         * Call this method to access unwrapped content. This could be useful for
+         * accessing i.e. HTML content that is output inside document tags by the
+         * send() and save() methods.
+         * 
+         * @param Generator $generator The WSDL generator.
+         * @return string
+         */
+        public function getContent($generator): string
         {
                 
         }
