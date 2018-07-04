@@ -282,8 +282,7 @@ class CodeDocument implements DocumentFormatter
                 $body->setAttribute("xmlns", $generator->ns);
                 $envelop->appendChild($body);
 
-                $method = $body->appendChild(new DomElement($name));
-                $return = $method->appendChild(new DOMElement("return"));
+                $return = $body->appendChild(new DomElement($name));
 
                 foreach ($data['output'] as $type) {
                         $this->addParameter($generator, $return, $type['name'], $type['type']);
@@ -305,8 +304,8 @@ class CodeDocument implements DocumentFormatter
                         $child = $node->appendChild(new DOMElement($name, $type));
                 } else {
                         $child = $node->appendChild(new DOMElement($name));
-                        $data = $generator->complexTypes[$type];
-                        foreach ($data as $d) {
+                        $cdata = $generator->complexTypes[$type];
+                        foreach ($cdata as $d) {
                                 $this->addParameter($generator, $child, $d['name'], $d['type']);
                         }
                 }
