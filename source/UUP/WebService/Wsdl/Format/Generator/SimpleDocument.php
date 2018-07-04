@@ -35,8 +35,7 @@ class SimpleDocument implements DocumentFormatter
          */
         function send($generator)
         {
-                $document = $generator->getDocument();
-                echo $document->saveHTML();
+                echo $this->getDocument($generator);
         }
 
         /**
@@ -46,8 +45,7 @@ class SimpleDocument implements DocumentFormatter
          */
         function save($generator, $filename)
         {
-                $document = $generator->getDocument();
-                $document->saveHTMLFile($filename);
+                file_put_contents($filename, $this->getDocument($generator));
         }
 
         /**
@@ -63,7 +61,35 @@ class SimpleDocument implements DocumentFormatter
         public function getContent($generator): string
         {
                 $document = $generator->getDocument();
-                return $document->saveHTML();
+                $xcontent = $document->saveHTML();
+
+                return $xcontent;
+        }
+
+        /**
+         * Get HTML document.
+         * @param Generator $generator The WSDL generator.
+         * @return string 
+         */
+        private function getDocument($generator)
+        {
+                $service = $generator->serviceName;
+                $content = $this->getContent($generator);
+
+                $result = sprintf("<html>"
+                    . "<head>"
+                    . "<title>SOAP service - %s</title>"
+                    . "<link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"/>"
+                    . "</head>"
+                    . "<body>"
+                    . "<div class=\"w3-panel w3-card w3-light-grey\">"
+                    . "<h3>%s SOAP Service</h3>"
+                    . "<div class=\"w3-code\">%s</div>"
+                    . "</div>"
+                    . "</body>"
+                    . "</html>"
+                    . "", $service, $service, htmlentities($content));
+                return $result;
         }
 
 }
