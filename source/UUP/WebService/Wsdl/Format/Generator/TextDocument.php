@@ -26,7 +26,7 @@ use UUP\WebService\Wsdl\Generator;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class SimpleDocument implements DocumentFormatter
+class TextDocument implements DocumentFormatter
 {
 
         /**

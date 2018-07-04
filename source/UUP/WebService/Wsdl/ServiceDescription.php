@@ -27,9 +27,8 @@ namespace UUP\WebService\Wsdl;
 
 use InvalidArgumentException;
 use UUP\WebService\Wsdl\Format\DocumentFormatter;
-use UUP\WebService\Wsdl\Format\Generator\HtmlContent as HtmlContentFormatter;
 use UUP\WebService\Wsdl\Format\Generator\HtmlDocument as HtmlDocumentFormatter;
-use UUP\WebService\Wsdl\Format\Generator\SimpleDocument as SimpleDocumentFormatter;
+use UUP\WebService\Wsdl\Format\Generator\TextDocument as TextDocumentFormatter;
 use UUP\WebService\Wsdl\Format\Generator\WsdlDocument as WsdlDocumentFormatter;
 use UUP\WebService\Wsdl\Format\Transformer\CodeDocument as CodeDocumentFormatter;
 use UUP\WebService\Wsdl\Format\Transformer\XsltStylesheet as XsltStylesheetFormatter;
@@ -59,9 +58,9 @@ class ServiceDescription
          */
         const FORMAT_CODE = 'code';
         /**
-         * Format as simple HTML (raw).
+         * Format WSDL description wrapped in code/pre HTML tags.
          */
-        const FORMAT_SIMPLE = 'simple';
+        const FORMAT_TEXT = 'text';
 
         /**
          * The SOAP service class.
@@ -259,8 +258,8 @@ class ServiceDescription
                                 return new XsltStylesheetFormatter();
                         case self::FORMAT_CODE:
                                 return new CodeDocumentFormatter();
-                        case self::FORMAT_SIMPLE:
-                                return new SimpleDocumentFormatter();
+                        case self::FORMAT_TEXT:
+                                return new TextDocumentFormatter();
                         default:
                                 throw new InvalidArgumentException("Unknown output format $format");
                 }
