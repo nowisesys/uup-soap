@@ -61,7 +61,7 @@ class TextDocument implements DocumentFormatter
         public function getContent($generator): string
         {
                 $document = $generator->getDocument();
-                $xcontent = $document->saveHTML();
+                $xcontent = $document->saveXML();
 
                 return $xcontent;
         }
@@ -84,7 +84,7 @@ class TextDocument implements DocumentFormatter
                     . "<body>"
                     . "<div class=\"w3-panel w3-card w3-light-grey\">"
                     . "<h3>%s SOAP Service</h3>"
-                    . "<div class=\"w3-code\">%s</div>"
+                    . "<div class=\"w3-code\"><pre>%s</pre></div>"
                     . "</div>"
                     . "</body>"
                     . "</html>"
