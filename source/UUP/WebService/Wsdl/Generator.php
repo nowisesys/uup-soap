@@ -43,7 +43,7 @@ class Generator extends WsdlGenerator
          */
         public function getDocument()
         {
-                $xmldoc = new \DomDocument("1.0");
+                $xmldoc = new \DomDocument("1.0", "utf-8");
                 $root = $xmldoc->createElement('wsdl:definitions');
                 $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsd', 'http://www.w3.org/2001/XMLSchema');
                 $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:tns', $this->ns);

@@ -475,7 +475,7 @@ class WSDL_Gen
          */
         public function toXML()
         {
-                $wsdl = new DomDocument("1.0");
+                $wsdl = new DomDocument("1.0", "utf-8");
                 $root = $wsdl->createElement('wsdl:definitions');
                 $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsd', 'http://www.w3.org/2001/XMLSchema');
                 $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:tns', $this->ns);
