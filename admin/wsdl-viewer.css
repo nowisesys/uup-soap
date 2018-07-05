@@ -36,6 +36,10 @@ limitations under the License.
 .soap-env-body {
 
 }
+.soap-type {
+    background-color: white;
+    margin-bottom: 10px;
+}
 
 /**
  * Style applied to wsdl:xxx elements:
@@ -47,7 +51,7 @@ limitations under the License.
 
 }
 .wsdl-definitions {
-    background-color: #e0e0e0;
+    
 }
 .wsdl-documentation {
 
@@ -80,6 +84,7 @@ limitations under the License.
 
 }
 .wsdl-types {
+    background-color: #e0e0e0;
 }
 
 /**
@@ -125,8 +130,8 @@ limitations under the License.
  */
 .code-info-button {
     margin: 5px 0 5px 0;
-/*    margin-top: 5px;
-    margin-top: 5px;*/
+    /*    margin-top: 5px;
+        margin-top: 5px;*/
     min-width: 100px;
 }
 .code-info-section {
