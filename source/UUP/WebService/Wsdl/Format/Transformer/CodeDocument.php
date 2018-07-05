@@ -407,10 +407,9 @@ class CodeDocument implements DocumentFormatter
          */
         private function addTypeHeader(&$node, $name)
         {
-                $ctype = $node->appendChild(new DomElement("div"));
-                $ctype->appendChild(new DomElement("h3", $name));
-                $ctype->setAttribute("class", "soap-type w3-container");
-                $node = $ctype;
+                $node = $node->appendChild(new DomElement("div"));
+                $node->appendChild(new DomElement("h3", $name));
+                $node->setAttribute("class", "soap-type w3-container");
         }
 
         /**
