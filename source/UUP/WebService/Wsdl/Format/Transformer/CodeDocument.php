@@ -191,19 +191,19 @@ class CodeDocument implements DocumentFormatter
                         // Add button group:
                         // 
                         $cbutt = $cnode->appendChild(new DOMElement("a", "Message"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green code-info-button");
                         $cbutt->setAttribute("onclick", "document.getElementById('message-$nname').style.display = 'block'");
 
                         $cbutt = $cnode->appendChild(new DOMElement("a", "Response"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green code-info-button");
                         $cbutt->setAttribute("onclick", "document.getElementById('response-$nname').style.display = 'block'");
 
                         $cbutt = $cnode->appendChild(new DOMElement("a", "Source"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-purple");
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-purple code-info-button");
                         $cbutt->setAttribute("onclick", "document.getElementById('source-$nname').style.display = 'block'");
 
                         $cbutt = $cnode->appendChild(new DOMElement("a", "Details"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange");
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange code-info-button");
                         $cbutt->setAttribute("onclick", "document.getElementById('method-$nname').style.display = 'block'");
 
                         // 
@@ -292,11 +292,11 @@ class CodeDocument implements DocumentFormatter
                         // Add button group:
                         // 
                         $cbutt = $ctype->appendChild(new DOMElement("a", "Serialized"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green code-info-button");
                         $cbutt->setAttribute("onclick", "document.getElementById('type-serialized-$name').style.display = 'block'");
 
                         $cbutt = $ctype->appendChild(new DOMElement("a", "Details"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange");
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange code-info-button");
                         $cbutt->setAttribute("onclick", "document.getElementById('type-details-$name').style.display = 'block'");
 
                         // 

@@ -119,3 +119,11 @@ limitations under the License.
 .xsd-boolean {
 
 }
+
+/**
+ * Miscellaneous:
+ */
+.code-info-button {
+    margin-top: 5px;
+    min-width: 100px;
+}
