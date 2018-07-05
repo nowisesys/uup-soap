@@ -127,3 +127,6 @@ limitations under the License.
     margin-top: 5px;
     min-width: 100px;
 }
+.code-info-section {
+    display: none;
+}

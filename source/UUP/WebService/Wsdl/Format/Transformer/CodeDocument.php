@@ -217,10 +217,9 @@ class CodeDocument implements DocumentFormatter
                         $message = $soap->getMessage($nname, $method['input']);
 
                         $child = $node->appendChild(new DOMElement("div"));
-                        $ccode = $child->appendChild(new DOMElement("span", $message));
-                        $ccode->setAttribute("class", "w3-code");
-                        $ccode->setAttribute("style", "display:none");
-                        $ccode->setAttribute("id", "message-$nname");
+                        $child->appendChild(new DOMElement("span", $message));
+                        $child->setAttribute("class", "w3-code code-info-section");
+                        $child->setAttribute("id", "message-$nname");
 
                         // 
                         // The SOAP response section:
@@ -228,10 +227,9 @@ class CodeDocument implements DocumentFormatter
                         $message = $soap->getResponse($nname, $method['output']);
 
                         $child = $node->appendChild(new DOMElement("div"));
-                        $ccode = $child->appendChild(new DOMElement("span", $message));
-                        $ccode->setAttribute("class", "w3-code");
-                        $ccode->setAttribute("style", "display:none");
-                        $ccode->setAttribute("id", "response-$nname");
+                        $child->appendChild(new DOMElement("span", $message));
+                        $child->setAttribute("class", "w3-code code-info-section");
+                        $child->setAttribute("id", "response-$nname");
 
                         // 
                         // The source code section:
@@ -239,19 +237,17 @@ class CodeDocument implements DocumentFormatter
                         $source = ReflectionMethod::export($generator->className, $nname, true);
 
                         $child = $node->appendChild(new DOMElement("div"));
-                        $ccode = $child->appendChild(new DOMElement("pre", $source));
-                        $ccode->setAttribute("class", "w3-code");
-                        $ccode->setAttribute("style", "display:none");
-                        $ccode->setAttribute("id", "source-$nname");
+                        $child->appendChild(new DOMElement("pre", $source));
+                        $child->setAttribute("class", "w3-code code-info-section");
+                        $child->setAttribute("id", "source-$nname");
 
                         // 
                         // The details section (method params and return values):
                         // 
                         $child = $node->appendChild(new DOMElement("div"));
-                        $ccode = $child->appendChild(new DOMElement("pre", var_export($method, true)));
-                        $ccode->setAttribute("class", "w3-code");
-                        $ccode->setAttribute("style", "display:none");
-                        $ccode->setAttribute("id", "method-$nname");
+                        $child->appendChild(new DOMElement("pre", var_export($method, true)));
+                        $child->setAttribute("class", "w3-code code-info-section");
+                        $child->setAttribute("id", "method-$nname");
                 }
         }
 
@@ -304,16 +300,14 @@ class CodeDocument implements DocumentFormatter
                         // 
                         $stype = $soap->getComplexType($type);
                         $ccode = $ctype->appendChild(new DOMElement("span", $stype));
-                        $ccode->setAttribute("class", "w3-code");
-                        $ccode->setAttribute("style", "display:none");
+                        $ccode->setAttribute("class", "w3-code code-info-section");
                         $ccode->setAttribute("id", "type-serialized-$name");
 
                         // 
                         // Add details section:
                         // 
                         $ccode = $ctype->appendChild(new DOMElement("pre", var_export($type, true)));
-                        $ccode->setAttribute("class", "w3-code");
-                        $ccode->setAttribute("style", "display:none");
+                        $ccode->setAttribute("class", "w3-code code-info-section");
                         $ccode->setAttribute("id", "type-details-$name");
                 }
         }
