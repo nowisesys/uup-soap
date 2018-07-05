@@ -62,7 +62,7 @@ class HtmlDocument implements DocumentFormatter
          * @param Generator $generator The WSDL generator.
          * @return string 
          */
-        private function getDocument($generator)
+        public function getDocument($generator)
         {
                 $service = $generator->serviceName;
                 $content = $this->getContent($generator);

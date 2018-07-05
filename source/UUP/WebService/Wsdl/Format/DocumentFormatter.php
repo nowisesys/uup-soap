@@ -53,4 +53,15 @@ interface DocumentFormatter
          * @return string
          */
         function getContent($generator);
+
+        /**
+         * Get complete document.
+         * 
+         * The method depends on the format implementation. For some formatters, this
+         * is equivalent to calling getContent().
+         * 
+         * @param Generator $generator The WSDL generator.
+         * @return string
+         */
+        function getDocument($generator);
 }

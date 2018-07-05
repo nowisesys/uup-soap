@@ -100,4 +100,15 @@ class XsltStylesheet implements DocumentFormatter
                 return $proc->transformToXml($xml);
         }
 
+        /**
+         * Get HTML document.
+         * 
+         * @param Generator $generator The WSDL generator.
+         * @return string
+         */
+        public function getDocument($generator): string
+        {
+                return $this->getContent($generator);
+        }
+
 }

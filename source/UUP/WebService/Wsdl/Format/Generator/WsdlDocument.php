@@ -67,4 +67,15 @@ class WsdlDocument implements DocumentFormatter
                 return $document->saveXML();
         }
 
+        /**
+         * Get WSDL document.
+         * 
+         * @param Generator $generator The WSDL generator.
+         * @return string
+         */
+        public function getDocument($generator): string
+        {
+                return $this->getContent($generator);
+        }
+
 }
