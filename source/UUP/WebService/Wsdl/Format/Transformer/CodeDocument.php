@@ -33,6 +33,11 @@ use UUP\WebService\Wsdl\Generator;
  * Display request/response XML messages as HTML and formatted PHP code. Provides buttons for 
  * example SOAP message and response (with type documentation) and details. Uses reflection
  * on SOAP class for extracting method signatures.
+ * 
+ * This class works by transforming the WSDL to HTML with element names converted to class
+ * attributes. The generated HTML source is then loaded in a DOM document that is decorated
+ * with method and type information read from the DOM document (i.e. xpath queries). The 
+ * final DOM document is saved as HTML.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
@@ -103,6 +108,7 @@ class CodeDocument implements DocumentFormatter
                     . "%s"
                     . "</body>"
                     . "</html>", $service, $styling, $service, $content);
+                
                 return $result;
         }
 
