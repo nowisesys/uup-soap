@@ -24,14 +24,14 @@
  *   o) Create map between XSD complex type and PHP classes.
  *   o) Keep properties private by default.
  * 
+ * Anders Lövgren, 2014-10-14
+ * 
  * @property-read array $operations The discovered SOAP methods.
  * @property-read string $className The SOAP service handler class.
  * @property-read string $serviceName The SOAP service name (short class name).
  * @property-read string $ns The SOAP service XML namespace.
  * @property-read string $endpoint The SOAP service endpoint (URL).
  * @property-read array $complexTypes Discovered complex types.
- * 
- * Anders Lövgren, 2014-10-14
  */
 class WSDL_Gen
 {
