@@ -188,6 +188,16 @@ class HtmlDocument implements DocumentFormatter
                         $child = $node->appendChild(new DomElement("span", $data['type']));
                         $child->setAttribute("class", "method-return");
                 }
+
+                // 
+                // Add [] for array types:
+                // 
+                if (!isset($data['repeat'])) {
+                        return;
+                }
+                if ($data['repeat'] == 'unbounded') {
+                        $child->nodeValue .= "[]";
+                }
         }
 
         /**
@@ -242,7 +252,7 @@ class HtmlDocument implements DocumentFormatter
                 // Add method parameters:
                 // 
                 foreach ($data as $index => $param) {
-                        $this->addMethodParam($generator, $node, $param['name'], $param['type'], $index);
+                        $this->addMethodParam($generator, $node, $param, $index);
                 }
 
                 // 
@@ -257,11 +267,10 @@ class HtmlDocument implements DocumentFormatter
          * 
          * @param Generator $generator The WSDL generator.
          * @param DOMNode $node The DOM node.
-         * @param string $name The parameter name.
-         * @param string $type The parameter type.
+         * @param array $data The parameter data.
          * @param int $index The parameter index.
          */
-        private function addMethodParam($generator, $node, $name, $type, $index)
+        private function addMethodParam($generator, $node, $data, $index)
         {
                 // 
                 // Add parameter separator:
@@ -273,24 +282,34 @@ class HtmlDocument implements DocumentFormatter
                 // 
                 // The return type is either void, standard or complex:
                 // 
-                if ($type == "void") {
+                if ($data['type'] == "void") {
                         $child = $node->appendChild(new DomElement("span", "void"));
                         $child->setAttribute("class", "method-param-type");
-                } elseif (isset($generator->complexTypes[$type])) {
-                        $child = $node->appendChild(new DomElement("a", $type));
-                        $child->setAttribute("href", "#type-" . $type);
+                } elseif (isset($generator->complexTypes[$data['type']])) {
+                        $child = $node->appendChild(new DomElement("a", $data['type']));
+                        $child->setAttribute("href", "#type-" . $data['type']);
                         $child->setAttribute("class", "method-param-type");
 
-                        $child = $node->appendChild(new DomElement("span", $name));
+                        $child = $node->appendChild(new DomElement("span", $data['name']));
                         $child->setAttribute("class", "method-param-name");
                         $child->setAttribute("style", "margin-left: 5px");
                 } else {
-                        $child = $node->appendChild(new DomElement("span", $type));
+                        $child = $node->appendChild(new DomElement("span", $data['name']));
                         $child->setAttribute("class", "method-param-type");
 
-                        $child = $node->appendChild(new DomElement("span", $name));
+                        $child = $node->appendChild(new DomElement("span", $data['name']));
                         $child->setAttribute("class", "method-param-name");
                         $child->setAttribute("style", "margin-left: 5px");
+                }
+
+                // 
+                // Add [] for array types:
+                // 
+                if (!isset($data['repeat'])) {
+                        return;
+                }
+                if ($data['repeat'] == 'unbounded') {
+                        $child->nodeValue .= "[]";
                 }
         }
 
