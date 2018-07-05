@@ -162,6 +162,11 @@ class CodeDocument implements DocumentFormatter
 
                 foreach ($found as $node) {
                         // 
+                        // Place content in container (add space on left/right):
+                        // 
+                        $node->setAttribute("class", "wsdl-method w3-container");
+
+                        // 
                         // Hide SOAP method bindings:
                         // 
                         if (strstr($node->parentNode->getAttribute("class"), "wsdl-binding")) {
@@ -180,7 +185,7 @@ class CodeDocument implements DocumentFormatter
                         $nname = $node->attributes->getNamedItem('name')->nodeValue;
                         $cnode = $node->insertBefore(new DOMElement("div"), $node->firstChild);
                         $cnode->appendChild(new DOMElement("h3", "$nname():"));
-                        $cnode->setAttribute("class", "wsdl-method");
+                        $cnode->setAttribute("class", "w3-margin-bottom");
 
                         // 
                         // Extract method input/output data:
@@ -281,12 +286,13 @@ class CodeDocument implements DocumentFormatter
                         // 
                         $ctype = $doc->appendChild(new DomElement("div"));
                         $ctype->appendChild(new DomElement("h3", $name));
+                        $ctype->setAttribute("class", "soap-type w3-container");
 
                         // 
                         // Add serialized type section:
                         // 
                         $stype = $soap->getComplexType($type);
-                        $ccode = $doc->appendChild(new DOMElement("span", $stype));
+                        $ccode = $ctype->appendChild(new DOMElement("span", $stype));
                         $ccode->setAttribute("class", "w3-code");
                         $ccode->setAttribute("style", "display:none");
                         $ccode->setAttribute("id", "type-serialized-$name");
