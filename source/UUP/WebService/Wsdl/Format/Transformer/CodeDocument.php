@@ -30,8 +30,9 @@ use UUP\WebService\Wsdl\Generator;
 /**
  * Format as HTML.
  * 
- * Display request/response XML messages as HTML and formatted PHP code. Provides buttons 
- * for example SOAP message and response (with type documentation) and details.
+ * Display request/response XML messages as HTML and formatted PHP code. Provides buttons for 
+ * example SOAP message and response (with type documentation) and details. Uses reflection
+ * on SOAP class for extracting method signatures.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
