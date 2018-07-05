@@ -161,6 +161,13 @@ class CodeDocument implements DocumentFormatter
                 $first->parentNode->insertBefore(new DomElement("h2", "Methods"), $first);
 
                 foreach ($found as $node) {
+                        // 
+                        // Hide SOAP method bindings:
+                        // 
+                        if (strstr($node->parentNode->getAttribute("class"), "wsdl-binding")) {
+                                $node->setAttribute("style", "display:none");
+                                continue;
+                        }
 
                         // 
                         // Create SOAP message generator:
