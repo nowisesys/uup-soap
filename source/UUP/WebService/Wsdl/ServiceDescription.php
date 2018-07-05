@@ -261,7 +261,7 @@ class ServiceDescription
                         case self::FORMAT_TEXT:
                                 return new TextDocumentFormatter();
                         default:
-                                throw new InvalidArgumentException("Unknown output format $format");
+                                return new HtmlDocumentFormatter();
                 }
         }
 
