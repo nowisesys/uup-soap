@@ -21,6 +21,7 @@ namespace UUP\WebService\Wsdl\Format\Transformer;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
+use ReflectionMethod;
 use RuntimeException;
 use UUP\WebService\Soap\SoapMessage;
 use UUP\WebService\Wsdl\Format\DocumentFormatter;
@@ -202,11 +203,22 @@ class CodeDocument implements DocumentFormatter
                         $ccode->setAttribute("id", "response-$nname");
 
                         // 
-                        // The details section (method params and return values):
+                        // The source code section:
                         // 
+                        $source = ReflectionMethod::export($generator->className, $nname, true);
 
                         $child = $node->appendChild(new DOMElement("div"));
+                        $ccode = $child->appendChild(new DOMElement("pre", $source));
+                        $ccode->setAttribute("class", "w3-code");
+                        $ccode->setAttribute("style", "display:none");
+                        $ccode->setAttribute("id", "source-$nname");
+
+                        // 
+                        // The details section (method params and return values):
+                        // 
+                        $child = $node->appendChild(new DOMElement("div"));
                         $ccode = $child->appendChild(new DOMElement("pre", var_export($method, true)));
+                        $ccode->setAttribute("class", "w3-code");
                         $ccode->setAttribute("style", "display:none");
                         $ccode->setAttribute("id", "method-$nname");
 
@@ -220,6 +232,10 @@ class CodeDocument implements DocumentFormatter
                         $cbutt = $cnode->appendChild(new DOMElement("a", "Response"));
                         $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
                         $cbutt->setAttribute("onclick", "document.getElementById('response-$nname').style.display = 'block'");
+
+                        $cbutt = $cnode->appendChild(new DOMElement("a", "Source"));
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-purple");
+                        $cbutt->setAttribute("onclick", "document.getElementById('source-$nname').style.display = 'block'");
 
                         $cbutt = $cnode->appendChild(new DOMElement("a", "Details"));
                         $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange");
