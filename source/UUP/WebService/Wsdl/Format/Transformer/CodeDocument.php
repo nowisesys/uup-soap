@@ -188,6 +188,25 @@ class CodeDocument implements DocumentFormatter
                         $cnode->setAttribute("class", "w3-margin-bottom");
 
                         // 
+                        // Add button group:
+                        // 
+                        $cbutt = $cnode->appendChild(new DOMElement("a", "Message"));
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
+                        $cbutt->setAttribute("onclick", "document.getElementById('message-$nname').style.display = 'block'");
+
+                        $cbutt = $cnode->appendChild(new DOMElement("a", "Response"));
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
+                        $cbutt->setAttribute("onclick", "document.getElementById('response-$nname').style.display = 'block'");
+
+                        $cbutt = $cnode->appendChild(new DOMElement("a", "Source"));
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-purple");
+                        $cbutt->setAttribute("onclick", "document.getElementById('source-$nname').style.display = 'block'");
+
+                        $cbutt = $cnode->appendChild(new DOMElement("a", "Details"));
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange");
+                        $cbutt->setAttribute("onclick", "document.getElementById('method-$nname').style.display = 'block'");
+
+                        // 
                         // Extract method input/output data:
                         // 
                         $method = $generator->operations[$nname];
@@ -233,25 +252,6 @@ class CodeDocument implements DocumentFormatter
                         $ccode->setAttribute("class", "w3-code");
                         $ccode->setAttribute("style", "display:none");
                         $ccode->setAttribute("id", "method-$nname");
-
-                        // 
-                        // Add button group:
-                        // 
-                        $cbutt = $cnode->appendChild(new DOMElement("a", "Message"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
-                        $cbutt->setAttribute("onclick", "document.getElementById('message-$nname').style.display = 'block'");
-
-                        $cbutt = $cnode->appendChild(new DOMElement("a", "Response"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
-                        $cbutt->setAttribute("onclick", "document.getElementById('response-$nname').style.display = 'block'");
-
-                        $cbutt = $cnode->appendChild(new DOMElement("a", "Source"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-purple");
-                        $cbutt->setAttribute("onclick", "document.getElementById('source-$nname').style.display = 'block'");
-
-                        $cbutt = $cnode->appendChild(new DOMElement("a", "Details"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange");
-                        $cbutt->setAttribute("onclick", "document.getElementById('method-$nname').style.display = 'block'");
                 }
         }
 
@@ -289,6 +289,17 @@ class CodeDocument implements DocumentFormatter
                         $ctype->setAttribute("class", "soap-type w3-container");
 
                         // 
+                        // Add button group:
+                        // 
+                        $cbutt = $ctype->appendChild(new DOMElement("a", "Serialized"));
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
+                        $cbutt->setAttribute("onclick", "document.getElementById('type-serialized-$name').style.display = 'block'");
+
+                        $cbutt = $ctype->appendChild(new DOMElement("a", "Details"));
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange");
+                        $cbutt->setAttribute("onclick", "document.getElementById('type-details-$name').style.display = 'block'");
+
+                        // 
                         // Add serialized type section:
                         // 
                         $stype = $soap->getComplexType($type);
@@ -301,19 +312,9 @@ class CodeDocument implements DocumentFormatter
                         // Add details section:
                         // 
                         $ccode = $ctype->appendChild(new DOMElement("pre", var_export($type, true)));
+                        $ccode->setAttribute("class", "w3-code");
                         $ccode->setAttribute("style", "display:none");
                         $ccode->setAttribute("id", "type-details-$name");
-
-                        // 
-                        // Add button group:
-                        // 
-                        $cbutt = $ctype->appendChild(new DOMElement("a", "Serialized"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
-                        $cbutt->setAttribute("onclick", "document.getElementById('type-serialized-$name').style.display = 'block'");
-
-                        $cbutt = $ctype->appendChild(new DOMElement("a", "Details"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange");
-                        $cbutt->setAttribute("onclick", "document.getElementById('type-details-$name').style.display = 'block'");
                 }
         }
 
