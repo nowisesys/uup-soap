@@ -25,6 +25,7 @@
 
 namespace UUP\WebService\Wsdl;
 
+use InvalidArgumentException;
 use UUP\WebService\Wsdl\Format\DocumentFormatter;
 use UUP\WebService\Wsdl\Format\Generator\HtmlDocument as HtmlDocumentFormatter;
 use UUP\WebService\Wsdl\Format\Generator\SyntaxDocument;
@@ -267,7 +268,11 @@ class ServiceDescription
                         case self::FORMAT_SYNTAX:
                                 return new SyntaxDocument();
                         default:
-                                return new HtmlDocumentFormatter();
+                                if (is_numeric($format) || empty($format)) {
+                                        return new HtmlDocumentFormatter();
+                                } else {
+                                        throw new InvalidArgumentException("Unknown requested format $format");
+                                }
                 }
         }
 
