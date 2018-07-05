@@ -327,7 +327,7 @@ class HtmlDocument implements DocumentFormatter
                 if (count($data['input'])) {
                         $this->addMethodParamsInfo($node, $data['input']);
                 }
-                if (count($data['output']) > 0 && isset($data['output'][0]['docs'])) {
+                if (count($data['output']) > 0 && !empty($data['output'][0]['docs'])) {
                         $this->addMethodReturnInfo($node, $data['output'][0]['docs']);
                 }
         }
@@ -375,7 +375,7 @@ class HtmlDocument implements DocumentFormatter
          */
         private function addMethodParamsInfo($node, $params)
         {
-                $node->appendChild(new DomElement("h4", "Parameters:"));
+                $node->appendChild(new DOMElement("h4", "Parameters:"));
 
                 $child = $node->appendChild(new DOMElement("dl"));
                 foreach ($params as $param) {
@@ -392,7 +392,8 @@ class HtmlDocument implements DocumentFormatter
          */
         private function addMethodReturnInfo($node, $message)
         {
-                $child = $node->appendChild(new DOMElement("div", $message));
+                $node->appendChild(new DOMElement("h4", "Return:"));
+                $node->appendChild(new DOMElement("p", $message));
         }
 
         /**
