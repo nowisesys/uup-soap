@@ -151,6 +151,25 @@ class SoapMessage
         }
 
         /**
+         * Get XML for complex type.
+         * @param array $data
+         * @return string
+         */
+        public function getComplexType($data)
+        {
+                $document = new DOMDocument("1.0", "utf-8");
+
+                foreach ($data as $name => $type) {
+                        if (is_string($name)) {
+                                $this->addParameter($document, $name, $type);
+                        } else {
+                                $this->addParameter($document, $type['name'], $type['type']);
+                        }
+                }
+                return $document->saveXML();
+        }
+
+        /**
          * Append type to DOM node.
          * 
          * @param DomElement $node The DOM element node.

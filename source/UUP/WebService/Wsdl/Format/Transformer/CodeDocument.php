@@ -214,15 +214,15 @@ class CodeDocument implements DocumentFormatter
                         // Add button group:
                         // 
                         $cbutt = $cnode->appendChild(new DOMElement("a", "Message"));
-                        $cbutt->setAttribute("class", "w3-btn w3-green w3-margin-right");
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
                         $cbutt->setAttribute("onclick", "document.getElementById('message-$nname').style.display = 'block'");
 
                         $cbutt = $cnode->appendChild(new DOMElement("a", "Response"));
-                        $cbutt->setAttribute("class", "w3-btn w3-green w3-margin-right");
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
                         $cbutt->setAttribute("onclick", "document.getElementById('response-$nname').style.display = 'block'");
 
                         $cbutt = $cnode->appendChild(new DOMElement("a", "Details"));
-                        $cbutt->setAttribute("class", "w3-btn w3-deep-orange w3-margin-right");
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange");
                         $cbutt->setAttribute("onclick", "document.getElementById('method-$nname').style.display = 'block'");
                 }
         }
@@ -241,14 +241,43 @@ class CodeDocument implements DocumentFormatter
                 $doc->appendChild(new DomElement("h2", "Types"));
 
                 foreach ($generator->complexTypes as $name => $type) {
+                        // 
+                        // Create SOAP message generator:
+                        // 
+                        $soap = new SoapMessage($generator);
+
+                        // 
+                        // Insert complex type header:
+                        // 
                         $ctype = $doc->appendChild(new DomElement("div"));
                         $ctype->appendChild(new DomElement("h3", $name));
-                        $cbutt = $ctype->appendChild(new DOMElement("a", "Details"));
-                        $cbutt->setAttribute("class", "w3-btn w3-green");
-                        $cbutt->setAttribute("onclick", "document.getElementById('type-$name').style.display = 'block'");
+
+                        // 
+                        // Add serialized type section:
+                        // 
+                        $stype = $soap->getComplexType($type);
+                        $ccode = $doc->appendChild(new DOMElement("span", $stype));
+                        $ccode->setAttribute("class", "w3-code");
+                        $ccode->setAttribute("style", "display:none");
+                        $ccode->setAttribute("id", "type-serialized-$name");
+
+                        // 
+                        // Add details section:
+                        // 
                         $ccode = $ctype->appendChild(new DOMElement("pre", var_export($type, true)));
                         $ccode->setAttribute("style", "display:none");
-                        $ccode->setAttribute("id", "type-$name");
+                        $ccode->setAttribute("id", "type-details-$name");
+
+                        // 
+                        // Add button group:
+                        // 
+                        $cbutt = $ctype->appendChild(new DOMElement("a", "Serialized"));
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green");
+                        $cbutt->setAttribute("onclick", "document.getElementById('type-serialized-$name').style.display = 'block'");
+
+                        $cbutt = $ctype->appendChild(new DOMElement("a", "Details"));
+                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange");
+                        $cbutt->setAttribute("onclick", "document.getElementById('type-details-$name').style.display = 'block'");
                 }
         }
 
