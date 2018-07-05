@@ -258,6 +258,13 @@ class CodeDocument implements DocumentFormatter
 
                 foreach ($generator->complexTypes as $name => $type) {
                         // 
+                        // The mixed complex type is for internal use:
+                        // 
+                        if ($name == 'mixed') {
+                                continue;
+                        }
+
+                        // 
                         // Create SOAP message generator:
                         // 
                         $soap = new SoapMessage($generator);
