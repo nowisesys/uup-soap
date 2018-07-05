@@ -25,9 +25,9 @@
 
 namespace UUP\WebService\Wsdl;
 
-use InvalidArgumentException;
 use UUP\WebService\Wsdl\Format\DocumentFormatter;
 use UUP\WebService\Wsdl\Format\Generator\HtmlDocument as HtmlDocumentFormatter;
+use UUP\WebService\Wsdl\Format\Generator\SyntaxDocument;
 use UUP\WebService\Wsdl\Format\Generator\TextDocument as TextDocumentFormatter;
 use UUP\WebService\Wsdl\Format\Generator\WsdlDocument as WsdlDocumentFormatter;
 use UUP\WebService\Wsdl\Format\Transformer\CodeDocument as CodeDocumentFormatter;
@@ -61,6 +61,10 @@ class ServiceDescription
          * Format WSDL description wrapped in code/pre HTML tags.
          */
         const FORMAT_TEXT = 'text';
+        /**
+         * Format WSDL description using highlight.js.
+         */
+        const FORMAT_SYNTAX = 'syntax';
 
         /**
          * The SOAP service class.
@@ -260,6 +264,8 @@ class ServiceDescription
                                 return new CodeDocumentFormatter();
                         case self::FORMAT_TEXT:
                                 return new TextDocumentFormatter();
+                        case self::FORMAT_SYNTAX:
+                                return new SyntaxDocument();
                         default:
                                 return new HtmlDocumentFormatter();
                 }

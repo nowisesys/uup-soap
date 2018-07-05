@@ -79,7 +79,7 @@ class HtmlDocument implements DocumentFormatter
                     . "</style>"
                     . "<h1 class=\"w3-center\">%s SOAP Service</h1>"
                     . "<div class=\"w3-container w3-right w3-padding w3-margin-right\">"
-                    . "  <a href=\"?docs=text\" class=\"w3-btn w3-blue-grey code-info-button\">WSDL</a>"
+                    . "  <a href=\"?docs=syntax\" class=\"w3-btn w3-blue-grey code-info-button\">WSDL</a>"
                     . "</div>"
                     . "%s"
                     . "<script>"

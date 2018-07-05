@@ -18,15 +18,12 @@
 
 namespace UUP\WebService\Wsdl\Format\Generator;
 
-use UUP\WebService\Wsdl\Format\DocumentFormatter;
-use UUP\WebService\Wsdl\Generator;
-
 /**
- * Format as simple HTML (raw).
+ * WSDL document (HTML) with syntax highlight.
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class TextDocument implements DocumentFormatter
+class SyntaxDocument implements \UUP\WebService\Wsdl\Format\DocumentFormatter
 {
 
         /**
@@ -71,7 +68,7 @@ class TextDocument implements DocumentFormatter
          * @param Generator $generator The WSDL generator.
          * @return string 
          */
-        public function getDocument($generator)
+        public function getDocument($generator): string
         {
                 $service = $generator->serviceName;
                 $content = $this->getContent($generator);
@@ -80,12 +77,13 @@ class TextDocument implements DocumentFormatter
                     . "<head>"
                     . "<title>SOAP service - %s</title>"
                     . "<link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"/>"
+                    . "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/solarized-dark.min.css\">"
                     . "</head>"
                     . "<body>"
-                    . "<div class=\"w3-panel w3-card w3-light-grey\">"
-                    . "<h1>%s SOAP Service</h1>"
-                    . "<div class=\"w3-code\"><pre>%s</pre></div>"
-                    . "</div>"
+                    . "<h1 class=\"w3-center\">%s SOAP Service</h1>"
+                    . "<div><pre><code class=\"xml\">%s</code></pre></div>"
+                    . "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js\"></script>"
+                    . "<script>hljs.initHighlightingOnLoad()</script>"
                     . "</body>"
                     . "</html>"
                     . "", $service, $service, htmlentities($content));
