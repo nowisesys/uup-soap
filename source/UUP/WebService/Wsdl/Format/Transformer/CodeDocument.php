@@ -22,6 +22,7 @@ use DOMDocument;
 use DOMElement;
 use DOMXPath;
 use RuntimeException;
+use UUP\WebService\Soap\SoapMessage;
 use UUP\WebService\Wsdl\Format\DocumentFormatter;
 use UUP\WebService\Wsdl\Generator;
 
@@ -138,6 +139,12 @@ class CodeDocument implements DocumentFormatter
                 return $xcontent;
         }
 
+        /**
+         * Add methods to DOM.
+         * 
+         * @param Generator $generator The WSDL generator.
+         * @param DOMDocument $doc The DOM document.
+         */
         private function addMethods($generator, $doc)
         {
                 // 
@@ -155,6 +162,11 @@ class CodeDocument implements DocumentFormatter
                 foreach ($found as $node) {
 
                         // 
+                        // Create SOAP message generator:
+                        // 
+                        $soap = new SoapMessage($generator);
+
+                        // 
                         // Insert method name header:
                         // 
                         $nname = $node->attributes->getNamedItem('name')->nodeValue;
@@ -170,7 +182,7 @@ class CodeDocument implements DocumentFormatter
                         // 
                         // The SOAP message section:
                         // 
-                        $message = $this->getMessage($generator, $nname, $method);
+                        $message = $soap->getMessage($nname, $method['input']);
 
                         $child = $node->appendChild(new DOMElement("div"));
                         $ccode = $child->appendChild(new DOMElement("span", $message));
@@ -181,7 +193,7 @@ class CodeDocument implements DocumentFormatter
                         // 
                         // The SOAP response section:
                         // 
-                        $message = $this->getResponse($generator, $nname, $method);
+                        $message = $soap->getResponse($nname, $method['output']);
 
                         $child = $node->appendChild(new DOMElement("div"));
                         $ccode = $child->appendChild(new DOMElement("span", $message));
@@ -215,6 +227,12 @@ class CodeDocument implements DocumentFormatter
                 }
         }
 
+        /**
+         * Add complex types to DOM.
+         * 
+         * @param Generator $generator The WSDL generator.
+         * @param DOMDocument $doc The DOM document.
+         */
         private function addTypes($generator, $doc)
         {
                 // 
@@ -231,90 +249,6 @@ class CodeDocument implements DocumentFormatter
                         $ccode = $ctype->appendChild(new DOMElement("pre", var_export($type, true)));
                         $ccode->setAttribute("style", "display:none");
                         $ccode->setAttribute("id", "type-$name");
-                }
-        }
-
-        /**
-         * Get SOAP method message.
-         * 
-         * @param Generator $generator The WSDL generator.
-         * @param string $name The method name.
-         * @param array $data The method description.
-         * @return string
-         */
-        private function getMessage($generator, $name, $data)
-        {
-                $document = new DOMDocument("1.0", "utf-8");
-
-                $envelop = $document->createElementNS("http://www.w3.org/2003/05/soap-envelope/", "soap:envelope");
-                $envelop->setAttribute("soap:encodingStyle", "http://www.w3.org/2003/05/soap-encoding");
-                $document->appendChild($envelop);
-
-                $body = $document->createElement("soap:body");
-                $body->setAttribute("xmlns", $generator->ns);
-                $envelop->appendChild($body);
-
-                $method = $body->appendChild(new DomElement($name));
-
-                foreach ($data['input'] as $type) {
-                        $this->addParameter($generator, $method, $type['name'], $type['type']);
-                }
-                return $document->saveXML();
-        }
-
-        /**
-         * Get SOAP method response.
-         * 
-         * @param Generator $generator The WSDL generator.
-         * @param string $name The method name.
-         * @param array $data The method description.
-         * @return string
-         */
-        private function getResponse($generator, $name, $data)
-        {
-                $document = new DOMDocument("1.0", "utf-8");
-
-                $envelop = $document->createElementNS("http://www.w3.org/2003/05/soap-envelope/", "soap:envelope");
-                $envelop->setAttribute("soap:encodingStyle", "http://www.w3.org/2003/05/soap-encoding");
-                $document->appendChild($envelop);
-
-                $body = $document->createElement("soap:body");
-                $body->setAttribute("xmlns", $generator->ns);
-                $envelop->appendChild($body);
-
-                error_log("NAME: $name");
-
-                if (count($data['output']) == 0) {
-                        $method = $body->appendChild(new DomElement($name));
-                        $return = $method->appendChild(new DomElement("return"));
-                } else {
-                        $return = $body->appendChild(new DomElement($name));
-                }
-
-                foreach ($data['output'] as $type) {
-                        $this->addParameter($generator, $return, $type['name'], $type['type']);
-                }
-                return $document->saveXML();
-        }
-
-        /**
-         * Append type to DOM node.
-         * 
-         * @param Generator $generator The WSDL generator.
-         * @param DomElement $node The DOM element node.
-         * @param string $name The parameter name.
-         * @param string $type The parameter type.
-         */
-        private function addParameter($generator, $node, $name, $type)
-        {
-                if (!isset($generator->complexTypes[$type])) {
-                        $child = $node->appendChild(new DOMElement($name, $type));
-                } else {
-                        $child = $node->appendChild(new DOMElement($name));
-                        $cdata = $generator->complexTypes[$type];
-                        foreach ($cdata as $d) {
-                                $this->addParameter($generator, $child, $d['name'], $d['type']);
-                        }
                 }
         }
 
