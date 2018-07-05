@@ -160,95 +160,176 @@ class CodeDocument implements DocumentFormatter
                 $first = $found->item(0);
                 $first->parentNode->insertBefore(new DomElement("h2", "Methods"), $first);
 
+                // 
+                // Add methods to node:
+                // 
                 foreach ($found as $node) {
-                        // 
-                        // Place content in container (add space on left/right):
-                        // 
-                        $node->setAttribute("class", "wsdl-method w3-container");
-
-                        // 
-                        // Hide SOAP method bindings:
-                        // 
-                        if (strstr($node->parentNode->getAttribute("class"), "wsdl-binding")) {
-                                $node->setAttribute("style", "display:none");
-                                continue;
-                        }
-
-                        // 
-                        // Create SOAP message generator:
-                        // 
-                        $soap = new SoapMessage($generator);
-
-                        // 
-                        // Insert method name header:
-                        // 
-                        $nname = $node->attributes->getNamedItem('name')->nodeValue;
-                        $cnode = $node->insertBefore(new DOMElement("div"), $node->firstChild);
-                        $cnode->appendChild(new DOMElement("h3", "$nname():"));
-                        $cnode->setAttribute("class", "w3-margin-bottom");
-
-                        // 
-                        // Add button group:
-                        // 
-                        $cbutt = $cnode->appendChild(new DOMElement("a", "Message"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green code-info-button");
-                        $cbutt->setAttribute("onclick", "document.getElementById('message-$nname').style.display = 'block'");
-
-                        $cbutt = $cnode->appendChild(new DOMElement("a", "Response"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green code-info-button");
-                        $cbutt->setAttribute("onclick", "document.getElementById('response-$nname').style.display = 'block'");
-
-                        $cbutt = $cnode->appendChild(new DOMElement("a", "Source"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-purple code-info-button");
-                        $cbutt->setAttribute("onclick", "document.getElementById('source-$nname').style.display = 'block'");
-
-                        $cbutt = $cnode->appendChild(new DOMElement("a", "Details"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange code-info-button");
-                        $cbutt->setAttribute("onclick", "document.getElementById('method-$nname').style.display = 'block'");
-
-                        // 
-                        // Extract method input/output data:
-                        // 
-                        $method = $generator->operations[$nname];
-
-                        // 
-                        // The SOAP message section:
-                        // 
-                        $message = $soap->getMessage($nname, $method['input']);
-
-                        $child = $node->appendChild(new DOMElement("div"));
-                        $child->appendChild(new DOMElement("span", $message));
-                        $child->setAttribute("class", "w3-code code-info-section");
-                        $child->setAttribute("id", "message-$nname");
-
-                        // 
-                        // The SOAP response section:
-                        // 
-                        $message = $soap->getResponse($nname, $method['output']);
-
-                        $child = $node->appendChild(new DOMElement("div"));
-                        $child->appendChild(new DOMElement("span", $message));
-                        $child->setAttribute("class", "w3-code code-info-section");
-                        $child->setAttribute("id", "response-$nname");
-
-                        // 
-                        // The source code section:
-                        // 
-                        $source = ReflectionMethod::export($generator->className, $nname, true);
-
-                        $child = $node->appendChild(new DOMElement("div"));
-                        $child->appendChild(new DOMElement("pre", $source));
-                        $child->setAttribute("class", "w3-code code-info-section");
-                        $child->setAttribute("id", "source-$nname");
-
-                        // 
-                        // The details section (method params and return values):
-                        // 
-                        $child = $node->appendChild(new DOMElement("div"));
-                        $child->appendChild(new DOMElement("pre", var_export($method, true)));
-                        $child->setAttribute("class", "w3-code code-info-section");
-                        $child->setAttribute("id", "method-$nname");
+                        $this->addMethod($generator, $node);
                 }
+        }
+
+        /**
+         * Add single method.
+         * 
+         * @param Generator $generator The WSDL generator.
+         * @param DomNode $node The DOM node.
+         */
+        private function addMethod($generator, $node)
+        {
+                // 
+                // Place content in container (add space on left/right):
+                // 
+                $node->setAttribute("class", "wsdl-method w3-container");
+
+                // 
+                // Hide SOAP method bindings:
+                // 
+                if (strstr($node->parentNode->getAttribute("class"), "wsdl-binding")) {
+                        $node->setAttribute("style", "display:none");
+                        return;
+                }
+
+                // 
+                // Create SOAP message generator:
+                // 
+                $soap = new SoapMessage($generator);
+
+                // 
+                // Insert method name header:
+                // 
+                $nname = $node->attributes->getNamedItem('name')->nodeValue;
+                $this->addMethodHeader($node, $nname);
+
+                // 
+                // Add button group:
+                // 
+                $this->addMethodButtons($node, $nname);
+
+                // 
+                // Extract method input/output data:
+                // 
+                $method = $generator->operations[$nname];
+
+                // 
+                // The SOAP message section:
+                // 
+                $message = $soap->getMessage($nname, $method['input']);
+                $this->addMethodMessageSection($node, $nname, $message);
+
+                // 
+                // The SOAP response section:
+                // 
+                $message = $soap->getResponse($nname, $method['output']);
+                $this->addMethodResponseSection($node, $nname, $message);
+
+                // 
+                // The source code section:
+                // 
+                $source = ReflectionMethod::export($generator->className, $nname, true);
+                $this->addMethodSourceSection($node, $nname, $source);
+
+                // 
+                // The details section (method params and return values):
+                // 
+                $this->addMethodDetailsSection($node, $nname, $method);
+        }
+
+        /**
+         * Add header for SOAP method.
+         * 
+         * @param DomNode $node The DOM node.
+         * @param string $name The method name.
+         */
+        private function addMethodHeader($node, $name)
+        {
+                $cnode = $node->insertBefore(new DOMElement("div"), $node->firstChild);
+                $cnode->appendChild(new DOMElement("h3", "$name():"));
+                $cnode->setAttribute("class", "w3-margin-bottom");
+        }
+
+        /**
+         * Add message section for SOAP method.
+         * 
+         * @param DomNode $node The DOM node.
+         * @param string $name The method name.
+         * @param string $message The method message (XML).
+         */
+        private function addMethodMessageSection($node, $name, $message)
+        {
+                $child = $node->appendChild(new DOMElement("div"));
+                $child->appendChild(new DOMElement("span", $message));
+                $child->setAttribute("class", "w3-code code-info-section");
+                $child->setAttribute("id", "message-$name");
+        }
+
+        /**
+         * Add response section for SOAP method.
+         * 
+         * @param DomNode $node The DOM node.
+         * @param string $name The method name.
+         * @param string $response The method response (XML).
+         */
+        private function addMethodResponseSection($node, $name, $response)
+        {
+                $child = $node->appendChild(new DOMElement("div"));
+                $child->appendChild(new DOMElement("span", $response));
+                $child->setAttribute("class", "w3-code code-info-section");
+                $child->setAttribute("id", "response-$name");
+        }
+
+        /**
+         * Add source section for SOAP method.
+         * 
+         * @param DomNode $node The DOM node.
+         * @param string $name The method name.
+         * @param string $source The method source (from reflection).
+         */
+        private function addMethodSourceSection($node, $name, $source)
+        {
+                $child = $node->appendChild(new DOMElement("div"));
+                $child->appendChild(new DOMElement("pre", $source));
+                $child->setAttribute("class", "w3-code code-info-section");
+                $child->setAttribute("id", "source-$name");
+        }
+
+        /**
+         * Add source section for SOAP method.
+         * 
+         * @param DomNode $node The DOM node.
+         * @param string $name The method name.
+         * @param array $method The method data (input/output).
+         */
+        private function addMethodDetailsSection($node, $name, $method)
+        {
+                $child = $node->appendChild(new DOMElement("div"));
+                $child->appendChild(new DOMElement("pre", var_export($method, true)));
+                $child->setAttribute("class", "w3-code code-info-section");
+                $child->setAttribute("id", "method-$name");
+        }
+
+        /**
+         * Add buttons for method section.
+         * 
+         * @param DomNode $node The DOM node.
+         * @param string $name The method name.
+         */
+        private function addMethodButtons($node, $name)
+        {
+                $cbutt = $node->appendChild(new DOMElement("a", "Message"));
+                $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green code-info-button");
+                $cbutt->setAttribute("onclick", "document.getElementById('message-$name').style.display = 'block'");
+
+                $cbutt = $node->appendChild(new DOMElement("a", "Response"));
+                $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green code-info-button");
+                $cbutt->setAttribute("onclick", "document.getElementById('response-$name').style.display = 'block'");
+
+                $cbutt = $node->appendChild(new DOMElement("a", "Source"));
+                $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-purple code-info-button");
+                $cbutt->setAttribute("onclick", "document.getElementById('source-$name').style.display = 'block'");
+
+                $cbutt = $node->appendChild(new DOMElement("a", "Details"));
+                $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange code-info-button");
+                $cbutt->setAttribute("onclick", "document.getElementById('method-$name').style.display = 'block'");
         }
 
         /**
@@ -262,54 +343,118 @@ class CodeDocument implements DocumentFormatter
                 // 
                 // Append complex types:
                 // 
-                $doc->appendChild(new DomElement("h2", "Types"));
+                $node = $doc->appendChild(new DomElement("div"));
+                $node->appendChild(new DomElement("h2", "Types"));
+                $node->setAttribute("class", "wsdl wsdl-types");
 
+                // 
+                // Add complex type sections:
+                // 
                 foreach ($generator->complexTypes as $name => $type) {
-                        // 
-                        // The mixed complex type is for internal use:
-                        // 
-                        if ($name == 'mixed') {
-                                continue;
-                        }
-
-                        // 
-                        // Create SOAP message generator:
-                        // 
-                        $soap = new SoapMessage($generator);
-
-                        // 
-                        // Insert complex type header:
-                        // 
-                        $ctype = $doc->appendChild(new DomElement("div"));
-                        $ctype->appendChild(new DomElement("h3", $name));
-                        $ctype->setAttribute("class", "soap-type w3-container");
-
-                        // 
-                        // Add button group:
-                        // 
-                        $cbutt = $ctype->appendChild(new DOMElement("a", "Serialized"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green code-info-button");
-                        $cbutt->setAttribute("onclick", "document.getElementById('type-serialized-$name').style.display = 'block'");
-
-                        $cbutt = $ctype->appendChild(new DOMElement("a", "Details"));
-                        $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange code-info-button");
-                        $cbutt->setAttribute("onclick", "document.getElementById('type-details-$name').style.display = 'block'");
-
-                        // 
-                        // Add serialized type section:
-                        // 
-                        $stype = $soap->getComplexType($type);
-                        $ccode = $ctype->appendChild(new DOMElement("span", $stype));
-                        $ccode->setAttribute("class", "w3-code code-info-section");
-                        $ccode->setAttribute("id", "type-serialized-$name");
-
-                        // 
-                        // Add details section:
-                        // 
-                        $ccode = $ctype->appendChild(new DOMElement("pre", var_export($type, true)));
-                        $ccode->setAttribute("class", "w3-code code-info-section");
-                        $ccode->setAttribute("id", "type-details-$name");
+                        $this->addType($generator, $node, $name, $type);
                 }
+        }
+
+        /**
+         * Add complex type.
+         * 
+         * @param Generator $generator The WSDL generator.
+         * @param DomNode $node The DOM node.
+         * @param string $name The type name.
+         * @param array $type The type data.
+         */
+        private function addType($generator, $node, $name, $type)
+        {
+                // 
+                // The mixed complex type is for internal use:
+                // 
+                if ($name == 'mixed') {
+                        return;
+                }
+
+                // 
+                // Create SOAP message generator:
+                // 
+                $soap = new SoapMessage($generator);
+
+                // 
+                // Insert complex type header:
+                // 
+                $this->addTypeHeader($node, $name);
+
+                // 
+                // Add button group:
+                // 
+                $this->addTypeButtons($node, $name);
+
+                // 
+                // Add serialized type section:
+                // 
+                $stype = $soap->getComplexType($type);
+                $this->addTypeSerializedSection($node, $name, $stype);
+
+                // 
+                // Add details section:
+                // 
+                $this->addTypeDetailsSection($node, $name, $type);
+        }
+
+        /**
+         * Add complex type header.
+         * 
+         * @param DomNode $node The DOM node.
+         * @param string $name The type name.
+         */
+        private function addTypeHeader($node, $name)
+        {
+                $ctype = $node->appendChild(new DomElement("div"));
+                $ctype->appendChild(new DomElement("h3", $name));
+                $ctype->setAttribute("class", "soap-type w3-container");
+        }
+
+        /**
+         * Add complex type buttons.
+         * 
+         * @param DomNode $node The DOM node.
+         * @param string $name The type name.
+         */
+        private function addTypeButtons($node, $name)
+        {
+                $cbutt = $node->appendChild(new DOMElement("a", "Serialized"));
+                $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-green code-info-button");
+                $cbutt->setAttribute("onclick", "document.getElementById('type-serialized-$name').style.display = 'block'");
+
+                $cbutt = $node->appendChild(new DOMElement("a", "Details"));
+                $cbutt->setAttribute("class", "w3-btn w3-margin-right w3-deep-orange code-info-button");
+                $cbutt->setAttribute("onclick", "document.getElementById('type-details-$name').style.display = 'block'");
+        }
+
+        /**
+         * Add section for serialized complex type.
+         * 
+         * @param DomNode $node The DOM node.
+         * @param string $name The type name.
+         * @param string $type The XML string.
+         */
+        private function addTypeSerializedSection($node, $name, $type)
+        {
+                $ccode = $node->appendChild(new DOMElement("span", $type));
+                $ccode->setAttribute("class", "w3-code code-info-section");
+                $ccode->setAttribute("id", "type-serialized-$name");
+        }
+
+        /**
+         * Add complex type details section.
+         * 
+         * @param DomNode $node The DOM node.
+         * @param string $name The type name.
+         * @param array $type The type data.
+         */
+        private function addTypeDetailsSection($node, $name, $type)
+        {
+                $ccode = $node->appendChild(new DOMElement("pre", var_export($type, true)));
+                $ccode->setAttribute("class", "w3-code code-info-section");
+                $ccode->setAttribute("id", "type-details-$name");
         }
 
 }
