@@ -468,7 +468,7 @@ class HtmlDocument implements DocumentFormatter
         {
                 $child = $node->appendChild(new DOMElement("div"));
                 $child->appendChild(new DOMElement("pre", $source));
-                $child->setAttribute("class", "w3-code code-info-section");
+                $child->setAttribute("class", "w3-code code-info-section w3-border-deep-purple");
                 $child->setAttribute("id", "source-$name");
         }
 
@@ -483,7 +483,7 @@ class HtmlDocument implements DocumentFormatter
         {
                 $child = $node->appendChild(new DOMElement("div"));
                 $child->appendChild(new DOMElement("pre", var_export($method, true)));
-                $child->setAttribute("class", "w3-code code-info-section");
+                $child->setAttribute("class", "w3-code code-info-section w3-border-deep-orange");
                 $child->setAttribute("id", "method-$name");
         }
 
@@ -585,7 +585,7 @@ class HtmlDocument implements DocumentFormatter
         private function addTypeDetailsSection($node, $name, $type)
         {
                 $ccode = $node->appendChild(new DOMElement("pre", var_export($type, true)));
-                $ccode->setAttribute("class", "w3-code code-info-section");
+                $ccode->setAttribute("class", "w3-code code-info-section w3-border-deep-orange");
                 $ccode->setAttribute("id", "type-details-$name");
         }
 
