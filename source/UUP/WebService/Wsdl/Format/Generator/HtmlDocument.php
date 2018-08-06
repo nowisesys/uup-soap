@@ -555,7 +555,7 @@ class HtmlDocument implements DocumentFormatter
         private function addTypeSections($generator, $node, $name, $type)
         {
                 $soap = new SoapMessage($generator);
-                $styp = $soap->getComplexType($type);
+                $styp = $soap->getComplexType($type, strtolower($name));
 
                 $this->addTypeSerializedSection($node, $name, $styp);
                 $this->addTypeDetailsSection($node, $name, $type);
