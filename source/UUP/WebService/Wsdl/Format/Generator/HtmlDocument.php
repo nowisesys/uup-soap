@@ -238,8 +238,6 @@ class HtmlDocument implements DocumentFormatter
          */
         private function addMethodParams($generator, $node, $data)
         {
-                error_log(print_r($data, true));
-                
                 // 
                 // Fix for missing parameters (void).
                 // 
