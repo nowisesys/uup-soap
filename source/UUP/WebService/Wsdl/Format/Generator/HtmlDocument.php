@@ -238,6 +238,8 @@ class HtmlDocument implements DocumentFormatter
          */
         private function addMethodParams($generator, $node, $data)
         {
+                error_log(print_r($data, true));
+                
                 // 
                 // Fix for missing parameters (void).
                 // 
@@ -297,7 +299,7 @@ class HtmlDocument implements DocumentFormatter
                         $child->setAttribute("class", "method-param-name");
                         $child->setAttribute("style", "margin-left: 5px");
                 } else {
-                        $child = $node->appendChild(new DomElement("span", $data['name']));
+                        $child = $node->appendChild(new DomElement("span", $data['type']));
                         $child->setAttribute("class", "method-param-type");
 
                         $child = $node->appendChild(new DomElement("span", $data['name']));
