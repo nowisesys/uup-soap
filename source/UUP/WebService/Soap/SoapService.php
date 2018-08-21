@@ -102,6 +102,11 @@ class SoapService
          * @var ServiceDescription 
          */
         protected $_description;
+        /**
+         * Use document literal wrapper.
+         * @var bool 
+         */
+        protected $_wrapper = false;
 
         /**
          * Constructor.
@@ -117,6 +122,15 @@ class SoapService
 
                 $this->setServiceClass($class);
                 $this->setServiceDescription($location, $namespace);
+        }
+
+        /**
+         * Set document literal wrapper mode.
+         * @param bool $enable Use wrapped mode.
+         */
+        public function useWrapper($enable = true)
+        {
+                $this->_wrapper = $enable;
         }
 
         /**
@@ -310,6 +324,13 @@ class SoapService
                         'use'      => SOAP_LITERAL,
                         'classmap' => $generator->getClassMap()
                 );
+
+                // 
+                // Wrap handler if requested:
+                // 
+                if ($this->_wrapper) {
+                        $this->_handler = new Wrapper\DocumentLiteral($this->_handler);
+                }
 
                 // 
                 // Create SOAP server using WSDL mode:
