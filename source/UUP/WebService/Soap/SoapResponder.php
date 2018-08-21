@@ -28,7 +28,7 @@ use UUP\WebService\Wsdl\ServiceDescription;
  *
  * @author Anders Lövgren (Nowise Systems)
  */
-class SoapRequestHandler
+class SoapResponder
 {
 
         /**

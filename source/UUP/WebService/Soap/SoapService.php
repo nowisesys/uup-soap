@@ -232,12 +232,12 @@ class SoapService
          */
         public function sendHandlerResponse()
         {
-                $handler = new SoapRequestHandler($this->_handler, $this->_description);
+                $responder = new SoapResponder($this->_handler, $this->_description);
 
-                $handler->setDescriptionFilename($this->getDescriptionFilename());
-                $handler->useWrapper($this->_wrapper);
+                $responder->setDescriptionFilename($this->getDescriptionFilename());
+                $responder->useWrapper($this->_wrapper);
 
-                $handler->process();
+                $responder->process();
         }
 
         /**
