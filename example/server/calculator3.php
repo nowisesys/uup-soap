@@ -16,23 +16,35 @@
  * limitations under the License.
  */
 
-require_once("../vendor/autoload.php");
+require_once("../../vendor/autoload.php");
 
 use UUP\WebService\Example\Calculator;
 use UUP\WebService\Soap\SoapRequest;
 use UUP\WebService\Soap\SoapService;
-use UUP\WebService\Soap\Wrapper\DocumentLiteral;
+
+// 
+// Helps detect SOAP request:
+// 
+$request = new SoapRequest();
 
 // 
 // Create the SOAP service:
 // 
-$handler = new Calculator();
-$wrapper = new DocumentLiteral($handler);
 $service = new SoapService(Calculator::class);
-$service->setHandler($wrapper);
+$service->useWrapper();
+$service->setName("My Calculator");
 
 // 
 // Handle the SOAP request:
 // 
-$request = new SoapRequest();
-$request->process($service);
+switch ($request->target) {
+        case SoapRequest::TARGET_DOCS:
+                $service->sendDocumentation();
+                break;
+        case SoapRequest::TARGET_WSDL:
+                $service->sendDescription();
+                break;
+        case SoapRequest::TARGET_SOAP:
+                $service->handleRequest();
+                break;
+}

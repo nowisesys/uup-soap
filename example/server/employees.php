@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-require_once("../vendor/autoload.php");
+require_once("../../vendor/autoload.php");
 
 use UUP\WebService\Example\Employees;
 use UUP\WebService\Soap\SoapRequest;
