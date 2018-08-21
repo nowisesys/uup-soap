@@ -294,10 +294,10 @@ class SoapService
         public function handleRequest()
         {
                 $handler = new SoapRequestHandler($this->_handler, $this->_description);
-                
+
                 $handler->setDescriptionFilename($this->getDescriptionFilename());
                 $handler->useWrapper($this->_wrapper);
-                
+
                 $handler->process();
         }
 
