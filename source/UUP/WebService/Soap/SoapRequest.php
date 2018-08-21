@@ -158,7 +158,7 @@ class SoapRequest
                                 $service->sendDescription();
                                 break;
                         case self::TARGET_SOAP:
-                                $service->handleRequest();
+                                $service->sendHandlerResponse();
                                 break;
                 }
         }

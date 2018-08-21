@@ -107,6 +107,11 @@ class SoapService
          * @var bool 
          */
         protected $_wrapper = false;
+        /**
+         * Use SOAP request detection.
+         * @var bool 
+         */
+        protected $_request = false;
 
         /**
          * Constructor.
@@ -131,6 +136,15 @@ class SoapService
         public function useWrapper($enable = true)
         {
                 $this->_wrapper = $enable;
+        }
+
+        /**
+         * Use SOAP request detection.
+         * @param bool $enable Use detection mode.
+         */
+        public function useRequest($enable = true)
+        {
+                $this->_request = $enable;
         }
 
         /**
@@ -214,6 +228,31 @@ class SoapService
         }
 
         /**
+         * Send SOAP handler response.
+         */
+        public function sendHandlerResponse()
+        {
+                $handler = new SoapRequestHandler($this->_handler, $this->_description);
+
+                $handler->setDescriptionFilename($this->getDescriptionFilename());
+                $handler->useWrapper($this->_wrapper);
+
+                $handler->process();
+        }
+
+        /**
+         * Send SOAP request response.
+         * 
+         * Calling this method will detect if HTML, WSDL or SOAP response should be 
+         * sent depending on request parameters.
+         */
+        public function sendRequestResponse()
+        {
+                $request = new SoapRequest();
+                $request->process($this, $this->_handler);
+        }
+
+        /**
          * Set service class and handler.
          * @param string|object $class The service class.
          */
@@ -290,15 +329,16 @@ class SoapService
 
         /**
          * Handle the SOAP request.
+         * 
+         * If use request has been enabled, then this method will take care ot
          */
         public function handleRequest()
         {
-                $handler = new SoapRequestHandler($this->_handler, $this->_description);
-
-                $handler->setDescriptionFilename($this->getDescriptionFilename());
-                $handler->useWrapper($this->_wrapper);
-
-                $handler->process();
+                if ($this->_request) {
+                        $this->sendRequestResponse();
+                } else {
+                        $this->sendHandlerResponse();
+                }
         }
 
 }
