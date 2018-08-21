@@ -93,7 +93,7 @@ class Calculator implements SoapHandler
          */
         public function modulo($a, $b)
         {
-                return $a % $b;
+                return fmod($a, $b);
         }
 
 }
