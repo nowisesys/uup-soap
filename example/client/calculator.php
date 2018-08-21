@@ -33,7 +33,7 @@ class ServiceEndpoint
 
         public function __construct($script)
         {
-                $this->_location = self::getFullUrl(self::getEndpoint($script));
+                $this->_location = self::getEndpoint($script);
         }
 
         public function __toString()
