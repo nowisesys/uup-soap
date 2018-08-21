@@ -141,7 +141,11 @@ class SoapService
 
         /**
          * Set SOAP handler.
-         * @param SoapHandler $handler
+         * 
+         * Notice that the actual SOAP handler can be different from the object/class
+         * passed to constructor, i.e. a wrapper.
+         * 
+         * @param SoapHandler $handler The SOAP handler.
          */
         public function setHandler($handler)
         {
@@ -186,18 +190,16 @@ class SoapService
         }
 
         /**
-         * Set service class.
+         * Set service class and handler.
          * @param string|object $class The service class.
          */
         private function setServiceClass($class)
         {
                 if (is_object($class)) {
                         $this->_handler = $class;
-                }
-
-                if (isset($this->_handler)) {
                         $this->_class = get_class($this->_handler);
                 } else {
+                        $this->_handler = new $class();
                         $this->_class = $class;
                 }
         }
@@ -315,14 +317,9 @@ class SoapService
                 $server = new SoapServer($description->getServiceDocument(), $options);
 
                 // 
-                // Handle request using handler object (if set) or the SOAP
-                // service class.
+                // Handle request using handler object:
                 // 
-                if (isset($this->_handler)) {
-                        $server->setObject($this->_handler);
-                } else {
-                        $server->setClass($this->_class);
-                }
+                $server->setObject($this->_handler);
 
                 // 
                 // This is where we actually handle the request. If a called
