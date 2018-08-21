@@ -1,0 +1,19 @@
+Test clients and services.
+
+** Client:
+
+    Call from command line:
+
+        bash$> cd client
+        bash$> php calculator.php
+
+    Call from a web client:
+
+        bash$> curl http://localhost/uup-soap/client/calculator.php
+
+** Server:
+
+    Various test services. The calculator service comes in different flavors each
+    demonstrating special feature or usage patterns.
+
+// Anders Lövgren, 2018-08-21
