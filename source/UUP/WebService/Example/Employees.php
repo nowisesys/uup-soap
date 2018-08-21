@@ -48,7 +48,7 @@ class Employees implements SoapHandler
          * Constructor.
          * @param string $root The project root directory.
          */
-        public function __construct($root)
+        public function __construct($root = "../..")
         {
                 $this->initialize($root);
         }

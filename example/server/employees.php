@@ -26,7 +26,7 @@ use UUP\WebService\Soap\Wrapper\DocumentLiteral;
 // 
 // Create the SOAP service:
 // 
-$handler = new Employees("..");
+$handler = new Employees("../..");
 $wrapper = new DocumentLiteral($handler);
 $service = new SoapService(Employees::class);
 $service->setHandler($wrapper);
