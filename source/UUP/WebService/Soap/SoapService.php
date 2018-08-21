@@ -25,9 +25,8 @@
 
 namespace UUP\WebService\Soap;
 
-use Exception;
+use RuntimeException;
 use SoapFault;
-use SoapServer;
 use UUP\WebService\Wsdl\ServiceDescription;
 
 /**
@@ -123,10 +122,63 @@ class SoapService
         {
                 if (!extension_loaded('soap')) {
                         throw new SoapFault("Receiver", "The SOAP extension is not loaded.");
+                } elseif (is_string($class)) {
+                        $options = array(
+                                'class'     => $class,
+                                'location'  => $location,
+                                'namespace' => $namespace
+                        );
+                } elseif (is_array($class)) {
+                        $options = $class;
                 }
 
-                $this->setServiceClass($class);
-                $this->setServiceDescription($location, $namespace);
+                if (!isset($options['class'])) {
+                        throw new RuntimeException("The class arguemt is missing");
+                }
+                if (!isset($options['location'])) {
+                        $options['location'] = null;
+                }
+                if (!isset($options['namespace'])) {
+                        $options['namespace'] = null;
+                }
+
+                $this->setOptions($options);
+        }
+
+        /**
+         * Set runtime options.
+         * @param array $options The options array.
+         */
+        public function setOptions($options)
+        {
+                if (isset($options['class'])) {
+                        $this->setServiceClass($options['class']);
+                }
+
+                if (isset($options['handler'])) {
+                        $this->setHandler($options['handler']);
+                }
+
+                if (array_key_exists('location', $options) &&
+                    array_key_exists('namespace', $options)) {
+                        $this->setServiceDescription($options['location'], $options['namespace']);
+                } elseif (array_key_exists('location', $options)) {
+                        $this->setLocation($options['location']);
+                } elseif (array_key_exists('namespace', $options)) {
+                        $this->setNamespace($options['namespace']);
+                }
+
+                if (array_key_exists('wrapper', $options)) {
+                        $this->useWrapper($options['wrapper']);
+                }
+
+                if (array_key_exists('request', $options)) {
+                        $this->useRequest($options['request']);
+                }
+
+                if (array_key_exists('name', $options)) {
+                        $this->setName($options['name']);
+                }
         }
 
         /**
