@@ -281,13 +281,11 @@ class SoapService
          */
         private function getDescriptionFilename()
         {
-                if (!isset($this->_schemas)) {
-                        return null;
+                if (isset($this->_schemas)) {
+                        $name = strtolower(trim(strrchr($this->_class, '\\'), '\\'));
+                        $path = sprintf("%s/%s.wsdl", $this->_schemas, $name);
+                        return $path;
                 }
-                $name = strtolower(trim(strrchr($this->_class, '\\'), '\\'));
-                $path = sprintf("%s/%s.wsdl", $this->_schemas, $name);
-
-                return $path;
         }
 
         /**
@@ -295,76 +293,12 @@ class SoapService
          */
         public function handleRequest()
         {
-                $description = $this->_description;
-                $generator = $description->getGenerator();
-
-                // 
-                // Create cached service description:
-                // 
-                if (($filename = $this->getDescriptionFilename()) != null) {
-                        if (!file_exists($filename)) {
-                                $description->save($filename);
-                        }
-                }
-
-                // 
-                // Set URI of service description:
-                // 
-                if ($filename != null && file_exists($filename)) {
-                        $description->setServiceDocument($filename);
-                } else {
-                        $filename = $description->getServiceLocation() . '?wsdl';
-                        $description->setServiceDocument($filename);
-                }
-
-                // 
-                // Turn off WSDL cache when not using schema directory:
-                // 
-                if (!isset($this->_schemas)) {
-                        ini_set("soap.wsdl_cache_enabled", "0");
-                }
-
-                // 
-                // Use SOAP document/literal mode:
-                // 
-                $options = array(
-                        'uri'      => $description->getServiceDocument(),
-                        'location' => $description->getServiceLocation(),
-                        'style'    => SOAP_DOCUMENT,
-                        'use'      => SOAP_LITERAL,
-                        'classmap' => $generator->getClassMap()
-                );
-
-                // 
-                // Wrap handler if requested:
-                // 
-                if ($this->_wrapper) {
-                        $this->_handler = new Wrapper\DocumentLiteral($this->_handler);
-                }
-
-                // 
-                // Create SOAP server using WSDL mode:
-                // 
-                $server = new SoapServer($description->getServiceDocument(), $options);
-
-                // 
-                // Handle request using handler object:
-                // 
-                $server->setObject($this->_handler);
-
-                // 
-                // This is where we actually handle the request. If a called
-                // method throws, then convert the exception to SOAP fault
-                // object that is propagated to SOAP client.
-                // 
-                // See http://www.w3.org/TR/soap12-part1/#faultcodes
-                //
-                try {
-                        $server->handle();
-                } catch (Exception $exception) {
-                        $server->fault("Receiver", $exception->getMessage());
-                        throw $exception;       // Handle exception upstream
-                }
+                $handler = new SoapRequestHandler($this->_handler, $this->_description);
+                
+                $handler->setDescriptionFilename($this->getDescriptionFilename());
+                $handler->useWrapper($this->_wrapper);
+                
+                $handler->process();
         }
 
 }
