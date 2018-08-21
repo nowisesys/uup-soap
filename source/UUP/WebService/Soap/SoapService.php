@@ -154,6 +154,16 @@ class SoapService
         }
 
         /**
+         * Set the SOAP service name.
+         * @param string $name The service name.
+         */
+        public function setName($name)
+        {
+                $description = $this->_description;
+                $description->setServiceName($name);
+        }
+
+        /**
          * Set SOAP handler.
          * 
          * Notice that the actual SOAP handler can be different from the object/class

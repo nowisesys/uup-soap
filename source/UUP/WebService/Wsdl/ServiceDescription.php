@@ -102,6 +102,11 @@ class ServiceDescription
          * @var array 
          */
         private $_classmap = array();
+        /**
+         * The SOAP service name.
+         * @var string 
+         */
+        private $_name;
 
         /**
          * Constructor.
@@ -176,7 +181,20 @@ class ServiceDescription
         }
 
         /**
-         * Ser SOAP service document (file or URL).
+         * Set SOAP service name.
+         * 
+         * Call this method to override the SOAP service name. The default is
+         * to use the short form of handler class name.
+         *  
+         * @param string $name The service name.
+         */
+        public function setServiceName($name)
+        {
+                $this->_name = $name;
+        }
+
+        /**
+         * Set SOAP service document (file or URL).
          * @param string $location The service document.
          */
         public function setServiceDocument($location)
@@ -243,6 +261,10 @@ class ServiceDescription
                 $this->_generator->setClassPath($this->_classpath);
                 $this->_generator->setClassMap($this->_classmap);
                 $this->_generator->discover();
+
+                if (isset($this->_name)) {
+                        $this->_generator->serviceName = $this->_name;
+                }
 
                 return $this->_generator;
         }
