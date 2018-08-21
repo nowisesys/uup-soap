@@ -21,7 +21,7 @@ require_once("../../vendor/autoload.php");
 // 
 // The calculator service script:
 // 
-$script = "calculator4.php";
+$script = "calculator4b.php";
 
 // 
 // SOAP service endpoint helper.
