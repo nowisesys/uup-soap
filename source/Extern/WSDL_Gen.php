@@ -233,26 +233,9 @@ class WSDL_Gen
                         }
 
                         // 
-                        // Extract documentation:
+                        // Set method documentation:
                         // 
-                        $comment = trim($doc);
-                        $commentStart = strpos($comment, '/**') + 3;
-                        $comment = trim(substr($comment, $commentStart, strlen($comment) - 5));
-                        $description = '';
-                        $lines = preg_split("(\\n\\r|\\r\\n\\|\\r|\\n)", $comment);
-                        foreach ($lines as $line) {
-                                $line = trim($line);
-                                $lineStart = strpos($line, '*');
-                                if ($lineStart === false) {
-                                        $lineStart = -1;
-                                }
-                                $line = trim(substr($line, $lineStart + 1));
-                                if (!isset($line[0]) || $line[0] != "@") {
-                                        if (strlen($line) > 0) {
-                                                $description .= trim($line);
-                                        }
-                                }
-                        }
+                        $description = $this->getDocumentation($doc);
                         $this->_operations[$method->getName()]['documentation'] = $description;
                 }
         }
@@ -371,17 +354,9 @@ class WSDL_Gen
                 foreach ($this->_operations as $name => $params) {
                         $op = $doc->createElementNS(self::SCHEMA_WSDL, 'operation');
                         $op->setAttribute('name', $name);
-                        $opDocu = $doc->createElementNS(self::SCHEMA_WSDL, 'documentation');
-                        $documentation = "\n\t" . $params['documentation'];
-                        foreach ($params['input'] as $method) {
-                                $documentation .= "\n\t@param " . $this->_types[$method['type']]['name'] . " " . $method['docs'] . " [name=" . $method['name'] . "]";
-                        }
-                        foreach ($params['output'] as $method) {
-                                $documentation .= "\n\t@return " . $this->_types[$method['type']]['name'] . " " . $method['docs'];
-                        }
-                        $docuText = $doc->createTextNode($documentation);
-                        $opDocu->appendChild($docuText);
-                        $op->appendChild($opDocu);
+
+                        $this->addDocumentation($doc, $op, $params['documentation']);
+
                         foreach (array('input' => '', 'output' => 'Response') as $type => $postfix) {
                                 $sel = $doc->createElementNS(self::SCHEMA_WSDL, $type);
                                 $fullName = "$name" . ucfirst($postfix);
@@ -501,17 +476,26 @@ class WSDL_Gen
                 }
         }
 
-        protected function addDocumentation(DomDocument $doc, DomElement $root)
+        protected function addDocumentation(DomDocument $doc, DomElement $root, $string)
         {
                 $docs = $doc->createElementNS(self::SCHEMA_WSDL, 'documentation');
-                $text = $doc->createTextNode($this->getDocumentation());
+                $text = $doc->createTextNode($string);
                 $docs->appendChild($text);
                 $root->appendChild($docs);
         }
 
-        public function getDocumentation()
+        private function getDocumentation($text)
         {
-                return str_replace(array('/**', '*/', '*'), array('', '', ''), $this->_serviceDocs);
+                return htmlspecialchars(trim(
+                        str_replace(
+                            array('/**', '*/', '*', '$'), array('', '', '', ''), $text
+                        )
+                ));
+        }
+
+        public function getClassDocumentation()
+        {
+                return $this->getDocumentation($this->_serviceDocs);
         }
 
         /**

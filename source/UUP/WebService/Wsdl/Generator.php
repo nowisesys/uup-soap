@@ -51,7 +51,7 @@ class Generator extends WsdlGenerator
                 $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:wsdl', self::SCHEMA_WSDL);
                 $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:soapenc', self::SOAP_SCHEMA_ENCODING);
                 $root->setAttribute('targetNamespace', $this->ns);
-                $this->addDocumentation($xmldoc, $root);
+                $this->addDocumentation($xmldoc, $root, $this->getClassDocumentation());
                 $this->addTypes($xmldoc, $root);
                 $this->addMessages($xmldoc, $root);
                 $this->addPortType($xmldoc, $root);

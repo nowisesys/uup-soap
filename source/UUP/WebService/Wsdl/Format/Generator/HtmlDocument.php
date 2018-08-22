@@ -65,7 +65,7 @@ class HtmlDocument implements DocumentFormatter
         public function getDocument($generator)
         {
                 $service = $generator->serviceName;
-                $comment = $generator->getDocumentation();
+                $comment = $generator->getClassDocumentation();
                 $content = $this->getContent($generator);
 
                 $result = sprintf("<html>"
