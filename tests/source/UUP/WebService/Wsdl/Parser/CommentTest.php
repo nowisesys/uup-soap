@@ -181,4 +181,26 @@ class CommentTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($expect, $actual);
         }
 
+        /**
+         * @covers UUP\WebService\Wsdl\Parser\Comment::getDocument
+         */
+        public function testGetDocument()
+        {
+                $actual = $this->object->getDocument();
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_string($actual));
+
+                $expect = 421;
+                $actual = strlen($actual);
+                $this->assertEquals($expect, $actual);
+
+                $actual = (string) $this->object;
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_string($actual));
+
+                $expect = 421;
+                $actual = strlen($actual);
+                $this->assertEquals($expect, $actual);
+        }
+
 }

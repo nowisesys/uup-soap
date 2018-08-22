@@ -77,6 +77,34 @@ class Comment
                 }
         }
 
+        public function __toString()
+        {
+                return $this->getDocument();
+        }
+
+        /**
+         * Get text representation of this object.
+         * 
+         * @param string $join The join string for description.
+         * @return string
+         */
+        public function getDocument($join = "\n")
+        {
+                $output = $this->getSummary();
+
+                if ($this->hasDescription()) {
+                        $output .= sprintf("\n\n%s", $this->getDescription($join));
+                }
+                if ($this->hasAnnotations()) {
+                        $output .= "\n";
+                }
+                foreach ($this->getAnnotations() as $data) {
+                        $output .= sprintf("\n" . implode("\n", $data));
+                }
+
+                return $output;
+        }
+
         /**
          * Get summary text.
          * @return string
@@ -131,6 +159,15 @@ class Comment
         public function hasReturn()
         {
                 return $this->hasAnnotation('return');
+        }
+
+        /**
+         * Check if annotations exists.
+         * @return bool
+         */
+        public function hasAnnotations()
+        {
+                return count($this->_annotations) != 0;
         }
 
         /**
