@@ -18,6 +18,8 @@
 
 namespace UUP\WebService\Wsdl\Parser;
 
+use InvalidArgumentException;
+
 /**
  * Document comment parser.
  * 
@@ -86,14 +88,15 @@ class Comment
          * Get text representation of this object.
          * 
          * @param string $join The join string for description.
+         * @param bool $trim Remove empty description lines.
          * @return string
          */
-        public function getDocument($join = "\n")
+        public function getDocument($join = "\n", $trim = false)
         {
                 $output = $this->getSummary();
 
                 if ($this->hasDescription()) {
-                        $output .= sprintf("\n\n%s", $this->getDescription($join));
+                        $output .= sprintf("\n\n%s", $this->getDescription($join, $trim));
                 }
                 if ($this->hasAnnotations()) {
                         $output .= "\n";
@@ -123,14 +126,28 @@ class Comment
          * </code>
          * 
          * @param bool|string $join The join string.
+         * @param bool $trim Remove empty description lines.
          * @return array|string
          */
-        public function getDescription($join = false)
+        public function getDescription($join = false, $trim = false)
         {
-                if ($join) {
-                        return implode($join, $this->_description);
+                if (!is_bool($join) && !is_string($join)) {
+                        throw new InvalidArgumentException("Expected boolean or string for join argument");
+                }
+                if (is_bool($join) && $join === true) {
+                        $join = "\n";
+                }
+
+                if ($trim) {
+                        $description = array_filter($this->_description);
                 } else {
-                        return $this->_description;
+                        $description = $this->_description;
+                }
+
+                if ($join) {
+                        return implode($join, $description);
+                } else {
+                        return $description;
                 }
         }
 
@@ -233,8 +250,8 @@ class Comment
                 $description = implode("\n", $this->_description);
                 $description = trim($description, "\n");
                 $description = explode("\n", $description);
-                
-                if(empty($description[0])) {
+
+                if (empty($description[0])) {
                         $this->_description = array();
                 } else {
                         $this->_description = $description;
