@@ -87,14 +87,35 @@ class CommentTest extends \PHPUnit_Framework_TestCase
          */
         public function testGetDescription()
         {
-                $expect = true;
-                $actual = $this->object->getDescription();
+                $actual = $this->object->getDescription(false, false);
                 $this->assertNotNull($actual);
-                $this->assertEquals($expect, is_array($actual));
+                $this->assertTrue(is_array($actual));
+                $this->assertEquals(9, count($actual));
 
-                $expect = 9;
-                $actual = count($this->object->getDescription());
-                $this->assertEquals($expect, $actual);
+                $actual = $this->object->getDescription(false, true);
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_array($actual));
+                $this->assertEquals(7, count($actual));
+
+                $actual = $this->object->getDescription(true, false);
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_string($actual));
+                $this->assertEquals(158, strlen($actual));
+
+                $actual = $this->object->getDescription(true, true);
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_string($actual));
+                $this->assertEquals(156, strlen($actual));
+                
+                $actual = $this->object->getDescription("\n\t", false);
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_string($actual));
+                $this->assertEquals(166, strlen($actual));
+
+                $actual = $this->object->getDescription("\n\t", true);
+                $this->assertNotNull($actual);
+                $this->assertTrue(is_string($actual));
+                $this->assertEquals(162, strlen($actual));
         }
 
         /**
@@ -113,20 +134,13 @@ class CommentTest extends \PHPUnit_Framework_TestCase
          */
         public function testGetAnnotations()
         {
-                $expect = true;
-                $actual = $this->object->getAnnotations();
-                $this->assertNotNull($actual);
-                $this->assertEquals($expect, is_array($actual));
-
-                $expect = 4;
-                $actual = count($this->object->getAnnotations());
-                $this->assertEquals($expect, $actual);
-
                 $expect = array("param", "return", "author", "see");
-                $actual = array_keys($this->object->getAnnotations());
+                $actual = $this->object->getAnnotations();
+
                 $this->assertNotNull($actual);
-                $this->assertEquals(true, is_array($actual));
-                $this->assertEquals($expect, $actual);
+                $this->assertTrue(is_array($actual));
+                $this->assertEquals(4, count($actual));
+                $this->assertEquals($expect, array_keys($actual));
         }
 
         /**
