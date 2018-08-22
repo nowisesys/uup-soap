@@ -1,6 +1,6 @@
 {
     "name": "bmc/uup-soap",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "Export classes as SOAP service with builtin service description (WSDL) generation.",
     "type": "library",
     "keywords": ["soap", "wsdl", "service", "web", "uup", "bmc"],
