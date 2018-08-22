@@ -65,6 +65,7 @@ class HtmlDocument implements DocumentFormatter
         public function getDocument($generator)
         {
                 $service = $generator->serviceName;
+                $comment = $generator->getDocumentation();
                 $content = $this->getContent($generator);
 
                 $result = sprintf("<html>"
@@ -76,11 +77,14 @@ class HtmlDocument implements DocumentFormatter
                     . "<style>"
                     . ".code-info-button { margin: 5px 0 5px 0; min-width: 110px; }"
                     . ".code-info-section { display: none }"
+                    . "#comment { display: none }"
                     . "</style>"
-                    . "<h1 class=\"w3-center\">%s SOAP Service</h1>"
                     . "<div class=\"w3-container w3-right w3-padding w3-margin-right\">"
                     . "  <a href=\"?docs=syntax\" class=\"w3-btn w3-blue-grey code-info-button\">WSDL</a>"
+                    . "  <a href=\"#\" onclick=\"toggle_display('comment')\" class=\"w3-btn w3-blue-grey code-info-button\">Comment</a>"
                     . "</div>"
+                    . "<h1 class=\"w3-center\">%s SOAP Service</h1>"
+                    . "<div class=\"w3-code\" id=\"comment\"><pre>%s</pre></div>"
                     . "%s"
                     . "<script>"
                     . "function toggle_display(id) { "
@@ -93,7 +97,7 @@ class HtmlDocument implements DocumentFormatter
                     . "}"
                     . "</script>"
                     . "</body>"
-                    . "</html>", $service, $service, $content);
+                    . "</html>", $service, $service, $comment, $content);
 
                 return $result;
         }
