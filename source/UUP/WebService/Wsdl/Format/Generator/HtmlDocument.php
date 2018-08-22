@@ -25,6 +25,7 @@ use ReflectionMethod;
 use UUP\WebService\Soap\SoapMessage;
 use UUP\WebService\Wsdl\Format\DocumentFormatter;
 use UUP\WebService\Wsdl\Generator;
+use UUP\WebService\Wsdl\Parser\Comment;
 
 /**
  * Format as HTML.
@@ -371,7 +372,14 @@ class HtmlDocument implements DocumentFormatter
          */
         private function addMethodDocumentation($node, $message)
         {
-                $child = $node->appendChild(new DOMElement("div", $message));
+                $block = new Comment($message);
+                $child = $node->appendChild(new DOMElement("div", $block->getSummary()));
+                $child->setAttribute("class", "method-summary");
+
+                if ($block->hasDescription()) {
+                        $child = $node->appendChild(new DOMElement("div", $block->getDescription(" ", true)));
+                        $child->setAttribute("class", "method-summary w3-code w3-border-deep-orange");
+                }
         }
 
         /**
