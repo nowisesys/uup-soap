@@ -232,7 +232,13 @@ class Comment
         {
                 $description = implode("\n", $this->_description);
                 $description = trim($description, "\n");
-                $this->_description = explode("\n", $description);
+                $description = explode("\n", $description);
+                
+                if(empty($description[0])) {
+                        $this->_description = array();
+                } else {
+                        $this->_description = $description;
+                }
         }
 
         /**
