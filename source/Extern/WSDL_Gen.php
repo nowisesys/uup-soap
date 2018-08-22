@@ -29,6 +29,7 @@
  * @property-read array $operations The discovered SOAP methods.
  * @property-read string $className The SOAP service handler class.
  * @property-read string $serviceName The SOAP service name (short class name).
+ * @property-read string $serviceDocs The SOAP service docblock comment.
  * @property-read string $ns The SOAP service XML namespace.
  * @property-read string $endpoint The SOAP service endpoint (URL).
  * @property-read array $complexTypes Discovered complex types.
@@ -82,6 +83,7 @@ class WSDL_Gen
         private $_operations = array();
         private $_className;
         private $_serviceName;
+        private $_serviceDocs;
         private $_ns;
         private $_endpoint;
         private $_complexTypes;
@@ -117,6 +119,8 @@ class WSDL_Gen
                                 return $this->_className;
                         case 'serviceName':
                                 return $this->_serviceName;
+                        case 'serviceDocs':
+                                return $this->_serviceDocs;
                         case 'ns':
                                 return $this->_ns;
                         case 'endpoint':
@@ -180,6 +184,7 @@ class WSDL_Gen
         {
                 $class = new ReflectionClass($this->_className);
                 $this->_serviceName = $class->getShortName();
+                $this->_serviceDocs = $class->getDocComment();
                 $methods = $class->getMethods();
                 $this->discoverOperations($methods);
                 $this->discoverTypes();
@@ -494,6 +499,19 @@ class WSDL_Gen
                                 $el->appendChild($ct);
                         }
                 }
+        }
+
+        protected function addDocumentation(DomDocument $doc, DomElement $root)
+        {
+                $docs = $doc->createElementNS(self::SCHEMA_WSDL, 'documentation');
+                $text = $doc->createTextNode($this->getDocumentation());
+                $docs->appendChild($text);
+                $root->appendChild($docs);
+        }
+
+        public function getDocumentation()
+        {
+                return str_replace(array('/**', '*/', '*'), array('', '', ''), $this->_serviceDocs);
         }
 
         /**
