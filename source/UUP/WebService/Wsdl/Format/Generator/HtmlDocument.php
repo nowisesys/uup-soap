@@ -81,6 +81,7 @@ class HtmlDocument implements DocumentFormatter
                     . ".code-info-button { margin: 5px 0 5px 0; min-width: 110px; }"
                     . ".code-info-section { display: none }"
                     . "#comment { display: none }"
+                    . ".method-icon { min-width: 15px }"
                     . ".method-description { display: none }"
                     . ".method-description-show:hover { cursor: pointer }"
                     . "</style>"
@@ -179,6 +180,9 @@ class HtmlDocument implements DocumentFormatter
         {
                 $cnode = $node->appendChild(new DOMElement("div"));
                 $cnode->setAttribute("class", "method-declaration");
+
+                $child = $cnode->appendChild(new DOMElement("span"));
+                $child->setAttribute("class", "method-icon fas fa-circle w3-margin-right w3-text-pink");
 
                 $this->addMethodReturn($generator, $cnode, $type['output']);
                 $this->addMethodSignature($generator, $cnode, $name, $type['input']);
@@ -372,7 +376,7 @@ class HtmlDocument implements DocumentFormatter
         private function addMethodSections($generator, $node, $name, $type)
         {
                 $soap = new SoapMessage($generator);
-                
+
                 $child = $node->appendChild(new DOMElement("div"));
                 $child->setAttribute("class", "code-info-sections");
 
@@ -418,11 +422,11 @@ class HtmlDocument implements DocumentFormatter
         {
                 if ($block->hasDescription()) {
                         $child = $node->appendChild(new DOMElement("span"));
-                        $child->setAttribute("class", "fas fa-chevron-circle-down w3-margin-right w3-text-deep-orange method-description-show");
+                        $child->setAttribute("class", "method-icon fas fa-chevron-circle-down w3-margin-right w3-text-deep-orange method-description-show");
                         $child->setAttribute("onclick", sprintf("toggle_display('%s')", $idtag));
                 } else {
                         $child = $node->appendChild(new DOMElement("span"));
-                        $child->setAttribute("class", "fas fa-circle w3-margin-right w3-text-deep-orange");
+                        $child->setAttribute("class", "method-icon fas fa-circle w3-margin-right w3-text-deep-orange");
                 }
 
                 $child = $node->appendChild(new DOMElement("span", $block->getSummary()));
@@ -457,7 +461,7 @@ class HtmlDocument implements DocumentFormatter
 
                 $child = $node->appendChild(new DOMElement("div"));
                 $child->setAttribute("class", "method-params");
-                
+
                 $plist = $child->appendChild(new DOMElement("dl"));
                 foreach ($params as $param) {
                         $plist->appendChild(new DOMElement("dt", $param['name']));
