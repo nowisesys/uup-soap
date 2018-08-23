@@ -452,10 +452,13 @@ class HtmlDocument implements DocumentFormatter
         {
                 $node->appendChild(new DOMElement("h4", "Parameters:"));
 
-                $child = $node->appendChild(new DOMElement("dl"));
+                $child = $node->appendChild(new DOMElement("div"));
+                $child->setAttribute("class", "method-params");
+                
+                $plist = $child->appendChild(new DOMElement("dl"));
                 foreach ($params as $param) {
-                        $child->appendChild(new DOMElement("dt", $param['name']));
-                        $child->appendChild(new DOMElement("dd", $param['docs']));
+                        $plist->appendChild(new DOMElement("dt", $param['name']));
+                        $plist->appendChild(new DOMElement("dd", $param['docs']));
                 }
         }
 
