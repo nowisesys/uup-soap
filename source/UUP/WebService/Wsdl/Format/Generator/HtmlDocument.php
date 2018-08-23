@@ -372,17 +372,20 @@ class HtmlDocument implements DocumentFormatter
         private function addMethodSections($generator, $node, $name, $type)
         {
                 $soap = new SoapMessage($generator);
+                
+                $child = $node->appendChild(new DOMElement("div"));
+                $child->setAttribute("class", "code-info-sections");
 
                 $message = $soap->getMessage($name, $type['input']);
-                $this->addMethodMessageSection($node, $name, $message);
+                $this->addMethodMessageSection($child, $name, $message);
 
                 $message = $soap->getResponse($name, $type['output']);
-                $this->addMethodResponseSection($node, $name, $message);
+                $this->addMethodResponseSection($child, $name, $message);
 
                 $source = ReflectionMethod::export($generator->className, $name, true);
-                $this->addMethodSourceSection($node, $name, $source);
+                $this->addMethodSourceSection($child, $name, $source);
 
-                $this->addMethodDetailsSection($node, $name, $type);
+                $this->addMethodDetailsSection($child, $name, $type);
         }
 
         /**
