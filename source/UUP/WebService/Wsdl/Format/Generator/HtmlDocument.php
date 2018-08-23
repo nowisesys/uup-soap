@@ -161,13 +161,29 @@ class HtmlDocument implements DocumentFormatter
                 $this->addMethodButtons($child, $name);
                 $child->appendChild(new DomElement("h4", "Method:"));
 
-                $anchor = $child->appendChild(new DomElement("a"));
-                $anchor->setAttribute("name", "method-$name");
+                $anode = $child->appendChild(new DomElement("a"));
+                $anode->setAttribute("name", "method-$name");
 
-                $this->addMethodReturn($generator, $child, $type['output']);
-                $this->addMethodSignature($generator, $child, $name, $type['input']);
-                $this->addMethodDescription($child, $name, $type);
-                $this->addMethodSections($generator, $child, $name, $type);
+                $this->addMethodDeclaration($generator, $child, $name, $type);
+        }
+
+        /**
+         * Add method declaration.
+         * 
+         * @param Generator $generator The WSDL generator.
+         * @param DOMNode $node The DOM node.
+         * @param string $name The method name.
+         * @param array $type The input/output parameters.
+         */
+        private function addMethodDeclaration($generator, $node, $name, $type)
+        {
+                $cnode = $node->appendChild(new DOMElement("div"));
+                $cnode->setAttribute("class", "method-declaration");
+
+                $this->addMethodReturn($generator, $cnode, $type['output']);
+                $this->addMethodSignature($generator, $cnode, $name, $type['input']);
+                $this->addMethodDescription($node, $name, $type);
+                $this->addMethodSections($generator, $node, $name, $type);
         }
 
         /**
