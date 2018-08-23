@@ -73,12 +73,16 @@ class HtmlDocument implements DocumentFormatter
                     . "<head>"
                     . "<title>SOAP service - %s</title>"
                     . "<link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"/>"
+                    . "<link rel=\"stylesheet\" href=\"https://use.fontawesome.com/releases/v5.2.0/css/solid.css\" integrity=\"sha384-wnAC7ln+XN0UKdcPvJvtqIH3jOjs9pnKnq9qX68ImXvOGz2JuFoEiCjT8jyZQX2z\" crossorigin=\"anonymous\">"
+                    . "<link rel=\"stylesheet\" href=\"https://use.fontawesome.com/releases/v5.2.0/css/fontawesome.css\" integrity=\"sha384-HbmWTHay9psM8qyzEKPc8odH4DsOuzdejtnr+OFtDmOcIVnhgReQ4GZBH7uwcjf6\" crossorigin=\"anonymous\">"
                     . "</head>"
                     . "<body>"
                     . "<style>"
                     . ".code-info-button { margin: 5px 0 5px 0; min-width: 110px; }"
                     . ".code-info-section { display: none }"
                     . "#comment { display: none }"
+                    . ".method-description { display: none }"
+                    . ".method-description-show:hover { cursor: pointer }"
                     . "</style>"
                     . "<div class=\"w3-container w3-right w3-padding w3-margin-right\">"
                     . "  <a href=\"?docs=syntax\" class=\"w3-btn w3-blue-grey code-info-button\">WSDL</a>"
@@ -162,7 +166,7 @@ class HtmlDocument implements DocumentFormatter
 
                 $this->addMethodReturn($generator, $child, $type['output']);
                 $this->addMethodSignature($generator, $child, $name, $type['input']);
-                $this->addMethodDescription($child, $type);
+                $this->addMethodDescription($child, $name, $type);
                 $this->addMethodSections($generator, $child, $name, $type);
         }
 
@@ -325,12 +329,13 @@ class HtmlDocument implements DocumentFormatter
          * Add method description.
          * 
          * @param DOMNode $node The DOM node.
+         * @param string $name The method name.
          * @param array $data The input/output parameters.
          */
-        private function addMethodDescription($node, $data)
+        private function addMethodDescription($node, $name, $data)
         {
                 if (isset($data['documentation'])) {
-                        $this->addMethodDocumentation($node, $data['documentation']);
+                        $this->addMethodDocumentation($node, $name, $data['documentation']);
                 }
                 if (count($data['input'])) {
                         $this->addMethodParamsInfo($node, $data['input']);
@@ -368,17 +373,56 @@ class HtmlDocument implements DocumentFormatter
          * Add method documentation.
          * 
          * @param DOMNode $node The DOM node.
+         * @param string $name The method name.
          * @param string $message The method description message.
          */
-        private function addMethodDocumentation($node, $message)
+        private function addMethodDocumentation($node, $name, $message)
         {
                 $block = new Comment($message);
-                $child = $node->appendChild(new DOMElement("div", $block->getSummary()));
-                $child->setAttribute("class", "method-summary");
+                $idtag = sprintf("method-description-%s", $name);
 
+                $cnode = $node->appendChild(new \DOMElement("div"));
+                $cnode->setAttribute("class", "method-documentation");
+
+                $this->addMethodDocumentationSummary($cnode, $idtag, $block);
+                $this->addMethodDocumentationDescription($cnode, $idtag, $block);
+        }
+
+        /**
+         * Add summary to method documentation.
+         * 
+         * @param DOMNode $node The DOM node.
+         * @param string $idtag The description section ID.
+         * @param Comment $block The docblock comment object.
+         */
+        private function addMethodDocumentationSummary($node, $idtag, $block)
+        {
+                if ($block->hasDescription()) {
+                        $child = $node->appendChild(new DOMElement("span"));
+                        $child->setAttribute("class", "fas fa-chevron-circle-down w3-margin-right w3-text-deep-orange method-description-show");
+                        $child->setAttribute("onclick", sprintf("toggle_display('%s')", $idtag));
+                } else {
+                        $child = $node->appendChild(new DOMElement("span"));
+                        $child->setAttribute("class", "fas fa-circle w3-margin-right w3-text-deep-orange");
+                }
+
+                $child = $node->appendChild(new DOMElement("span", $block->getSummary()));
+                $child->setAttribute("class", "method-summary");
+        }
+
+        /**
+         * Add description to method documentation.
+         * 
+         * @param DOMNode $node The DOM node.
+         * @param string $idtag The description section ID.
+         * @param Comment $block The docblock comment object.
+         */
+        private function addMethodDocumentationDescription($node, $idtag, $block)
+        {
                 if ($block->hasDescription()) {
                         $child = $node->appendChild(new DOMElement("div", $block->getDescription(" ", true)));
-                        $child->setAttribute("class", "method-summary w3-code w3-border-deep-orange");
+                        $child->setAttribute("class", "method-description w3-code w3-border-deep-orange");
+                        $child->setAttribute("id", $idtag);
                 }
         }
 
