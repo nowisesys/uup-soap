@@ -281,7 +281,7 @@ class WSDL_Gen
                 // 
                 // Create reflection on fully qualified class:
                 // 
-                if (strpos($className, '\\')) {
+                if (strpos($className, '\\') !== false) {
                         return new ReflectionClass($className);
                 }
 
