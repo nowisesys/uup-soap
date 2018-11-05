@@ -605,10 +605,45 @@ class HtmlDocument implements DocumentFormatter
                 $this->addTypeButtons($child, $name);
                 $child->appendChild(new DomElement("h4", $name));
 
+                $this->addTypeProperties($child, $type);
+
                 $anchor = $child->appendChild(new DomElement("a"));
                 $anchor->setAttribute("name", "type-$name");
 
                 $this->addTypeSections($generator, $child, $name, $type);
+        }
+
+        /**
+         * Add complex type properties.
+         * @param DomNode $node The DOM node.
+         * @param array $type The complex type data.
+         */
+        private function addTypeProperties($node, $type)
+        {
+                $child = $node->appendChild(new DOMElement("div"));
+                $child->setAttribute("class", "type-properties");
+
+                $plist = $child->appendChild(new DOMElement("dl"));
+
+                foreach ($type as $prop) {
+                        $this->addTypeProperty($plist, $prop);
+                }
+        }
+
+        /**
+         * Add complex type property.
+         * @param DomNode $node The DOM node.
+         * @param array $prop The complex type property data.
+         */
+        private function addTypeProperty($node, $prop)
+        {
+                $pnode = $node->appendChild(new DOMElement("dt"));
+
+                $cnode = $pnode->appendChild(new DOMElement("span"));
+                $cnode->setAttribute("class", "method-icon fas fa-circle w3-margin-right w3-text-indigo");
+                $cnode = $pnode->appendChild(new DOMElement("span", sprintf("%s %s", $prop['type'], $prop['name'])));
+
+                $pnode = $node->appendChild(new DOMElement("dd", $prop['docs']));
         }
 
         /**

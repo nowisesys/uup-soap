@@ -331,9 +331,12 @@ class WSDL_Gen
         {
                 $doc = $prop->getDocComment();
 
-                if (preg_match('|@var\s+(?:object\s+)?(\w+)|', $doc, $match)) {
-                        $type = $match[1];
-                        $this->_complexTypes[$className][] = array('name' => $prop->getName(), 'type' => $type);
+                if (preg_match('|[*\s]+(.*?)[*\s]+@var\s+(?:object\s+)?(\w+)|ms', $doc, $match)) {
+                        $docs = $match[1];
+                        $type = $match[2];
+                        $this->_complexTypes[$className][] = array(
+                                'name' => $prop->getName(), 'type' => $type, 'docs' => $docs
+                        );
                         if (!isset($this->_types[$type])) {
                                 $this->setComplexType($type);
                         }
