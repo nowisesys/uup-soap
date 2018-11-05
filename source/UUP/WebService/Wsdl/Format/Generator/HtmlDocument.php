@@ -554,9 +554,9 @@ class HtmlDocument implements DocumentFormatter
         private function addMethodSourceSection($node, $name, $source)
         {
                 $child = $node->appendChild(new DOMElement("div"));
-                $child->appendChild(new DOMElement("pre", $source));
-                $child->setAttribute("class", "w3-code code-info-section w3-border-deep-purple");
-                $child->setAttribute("id", "source-$name");
+                $ccode = $child->appendChild(new DOMElement("pre", $source));
+                $ccode->setAttribute("class", "w3-code code-info-section w3-border-deep-purple");
+                $ccode->setAttribute("id", "source-$name");
         }
 
         /**
@@ -569,9 +569,9 @@ class HtmlDocument implements DocumentFormatter
         private function addMethodDetailsSection($node, $name, $method)
         {
                 $child = $node->appendChild(new DOMElement("div"));
-                $child->appendChild(new DOMElement("pre", var_export($method, true)));
-                $child->setAttribute("class", "w3-code code-info-section w3-border-deep-orange");
-                $child->setAttribute("id", "method-$name");
+                $ccode = $child->appendChild(new DOMElement("pre", var_export($method, true)));
+                $ccode->setAttribute("class", "w3-code code-info-section w3-border-deep-orange");
+                $ccode->setAttribute("id", "method-$name");
         }
 
         /**
