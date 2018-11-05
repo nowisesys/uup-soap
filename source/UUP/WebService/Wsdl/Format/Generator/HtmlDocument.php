@@ -84,6 +84,7 @@ class HtmlDocument implements DocumentFormatter
                     . ".method-icon { min-width: 15px }"
                     . ".method-description { display: none }"
                     . ".method-description-show:hover { cursor: pointer }"
+                    . ".section-details { display: none }"
                     . "</style>"
                     . "<div class=\"w3-row\">"
                     . "  <div class=\"w3-twothird\">"
@@ -92,8 +93,10 @@ class HtmlDocument implements DocumentFormatter
                     . "  <div class=\"w3-third w3-padding\">"
                     . "    <a href=\"?docs=syntax\" class=\"w3-btn w3-blue-grey code-info-button\">WSDL</a>"
                     . "    <a href=\"#\" onclick=\"toggle_display('comment')\" class=\"w3-btn w3-blue-grey code-info-button\">Comment</a>"
+                    . "    <br>"
+                    . "    <input type=\"checkbox\" id=\"show-compact\" onclick=\"toggle_compact()\" checked>Show compact view</input>"
                     . "  </div>"
-                    . "</div>"                    
+                    . "</div>"
                     . "<div class=\"w3-code\" id=\"comment\"><pre>%s</pre></div>"
                     . "%s"
                     . "<script>"
@@ -104,6 +107,12 @@ class HtmlDocument implements DocumentFormatter
                     . "    } else {"
                     . "        elem.style.display = '';"
                     . "    }"
+                    . "}"
+                    . "function toggle_compact() { "
+                    . "    var hide = document.getElementById('show-compact');"
+                    . "    document.querySelectorAll('.section-details').forEach(function(sect) { "
+                    . "        sect.style.display = hide.checked ? 'none' : 'block';"
+                    . "    });"
                     . "}"
                     . "</script>"
                     . "</body>"
@@ -461,9 +470,12 @@ class HtmlDocument implements DocumentFormatter
          */
         private function addMethodParamsInfo($node, $params)
         {
-                $node->appendChild(new DOMElement("h4", "Parameters:"));
+                $sect = $node->appendChild(new DOMElement("div"));
+                $sect->setAttribute("class", "section-details");
 
-                $child = $node->appendChild(new DOMElement("div"));
+                $sect->appendChild(new DOMElement("h4", "Parameters:"));
+
+                $child = $sect->appendChild(new DOMElement("div"));
                 $child->setAttribute("class", "method-params");
 
                 $plist = $child->appendChild(new DOMElement("dl"));
@@ -625,7 +637,7 @@ class HtmlDocument implements DocumentFormatter
         private function addTypeProperties($node, $type)
         {
                 $child = $node->appendChild(new DOMElement("div"));
-                $child->setAttribute("class", "type-properties");
+                $child->setAttribute("class", "type-properties section-details");
 
                 $plist = $child->appendChild(new DOMElement("dl"));
 
