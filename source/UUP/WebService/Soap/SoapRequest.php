@@ -100,7 +100,7 @@ class SoapRequest
                 if (filter_has_var(INPUT_GET, self::TARGET_DOCS) ||
                     filter_has_var(INPUT_POST, self::TARGET_DOCS)) {
                         $this->_target = self::TARGET_DOCS;
-                        $this->_format = filter_input(INPUT_GET, self::TARGET_DOCS);
+                        $this->_format = filter_input(INPUT_GET, self::TARGET_DOCS, FILTER_SANITIZE_STRING);
                 }
                 if (filter_has_var(INPUT_GET, self::TARGET_SOAP) ||
                     filter_has_var(INPUT_POST, self::TARGET_SOAP)) {
@@ -108,10 +108,10 @@ class SoapRequest
                 }
 
                 if (filter_has_var(INPUT_GET, 'target')) {
-                        $this->_target = filter_input(INPUT_GET, 'target');
+                        $this->_target = filter_input(INPUT_GET, 'target', FILTER_SANITIZE_STRING);
                 }
                 if (filter_has_var(INPUT_POST, 'target')) {
-                        $this->_target = filter_input(INPUT_POST, 'target');
+                        $this->_target = filter_input(INPUT_POST, 'target', FILTER_SANITIZE_STRING);
                 }
 
                 if (filter_has_var(INPUT_SERVER, 'CONTENT_TYPE')) {
