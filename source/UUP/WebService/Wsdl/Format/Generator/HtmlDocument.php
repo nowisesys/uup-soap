@@ -78,6 +78,7 @@ class HtmlDocument implements DocumentFormatter
                     . "</head>"
                     . "<body>"
                     . "<style>"
+                    . "body { background-color: white }"
                     . ".code-info-button { margin: 5px 0 5px 0; min-width: 110px; }"
                     . ".code-info-section { display: none }"
                     . "#comment { display: none }"
