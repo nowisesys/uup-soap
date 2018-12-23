@@ -95,7 +95,7 @@ class HtmlDocument implements DocumentFormatter
                     . "    <a href=\"?docs=syntax\" class=\"w3-btn w3-blue-grey code-info-button\">WSDL</a>"
                     . "    <a href=\"#\" onclick=\"toggle_display('comment')\" class=\"w3-btn w3-blue-grey code-info-button\">Comment</a>"
                     . "    <br>"
-                    . "    <input type=\"checkbox\" id=\"show-compact\" onclick=\"toggle_compact()\" checked>Show compact view</input>"
+                    . "    <input class=\"w3-check\" type=\"checkbox\" id=\"show-compact\" onclick=\"toggle_compact()\" checked>Show compact view</input>"
                     . "  </div>"
                     . "</div>"
                     . "<div class=\"w3-code\" id=\"comment\"><pre>%s</pre></div>"
