@@ -48,6 +48,24 @@ Features:
 
         http://it.bmc.uu.se/andlov/php/uup-soap/java
 
+    To test service documentation (assume examples is linked as uup-soap under i.e.
+    htdocs:
+
+        http://localhost/uup-soap/server/employees.php?docs=syntax
+        http://localhost/uup-soap/server/employees.php?docs=html
+        http://localhost/uup-soap/server/employees.php?docs=text
+        http://localhost/uup-soap/server/employees.php?docs=wsdl
+        http://localhost/uup-soap/server/employees.php?docs=xslt
+
+    These shortcut (commonly used query strings) are also supported:
+
+        http://localhost/uup-soap/server/employees.php?docs=1       # Same as ?docs=html
+        http://localhost/uup-soap/server/employees.php?wsdl=1       # Same as ?docs=wsdl
+
+    The mode has been superseeded:
+
+        http://localhost/uup-soap/server/employees.php?docs=code    # use ?docs=html instead
+
 ** ABOUT DERIVED WORK:
 
     The WSDL generation uses the WSDL_Gen class (its author is unknown), but was republished
