@@ -1,10 +1,10 @@
 {
-    "name": "bmc/uup-soap",
-    "version": "1.2.8",
+    "name": "nowise/uup-soap",
+    "version": "1.2.9",
     "description": "Export classes as SOAP service with builtin service description (WSDL) generation.",
     "type": "library",
     "keywords": ["soap", "wsdl", "service", "web", "uup", "bmc"],
-    "homepage": "http://it.bmc.uu.se/andlov/php/proj/bmc/uup-soap",
+    "homepage": "https://nowise.se/oss/uup-soap",
     "license": "Apache-2.0",
     "authors": [
         {

@@ -39,7 +39,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
          * @author Anders Lövgren
          * @author Oscar Svensson <oscarsv@gmail.com>
          * 
-         * @see http://it.bmc.uu.se/andlov/php/uup-soap/
+         * @see https://nowise.se/oss/uup-soap/
          */");
         }
 
@@ -174,7 +174,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
                 $actual = $this->object->getAnnotation("missing");
                 $this->assertEquals($expect, $actual);
 
-                $expect = array("@see http://it.bmc.uu.se/andlov/php/uup-soap/");
+                $expect = array("@see https://nowise.se/oss/uup-soap/");
                 $actual = $this->object->getAnnotation("see");
                 $this->assertNotNull($actual);
                 $this->assertEquals($expect, $actual);

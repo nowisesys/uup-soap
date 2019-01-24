@@ -48,7 +48,7 @@ public function response($request, $service)
 Example Java files can be found in the example/java/client directory. Generate SOAP proxy
 using wsimport or download the full project from:
 
-* http://it.bmc.uu.se/andlov/php/uup-soap/java
+* https://nowise.se/oss/uup-soap/java
 
 To test service documentation (assume examples is linked as uup-soap under i.e.
 htdocs:
