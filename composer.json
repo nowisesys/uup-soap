@@ -1,9 +1,9 @@
 {
     "name": "nowise/uup-soap",
-    "version": "1.2.9",
+    "version": "1.2.10",
     "description": "Export classes as SOAP service with builtin service description (WSDL) generation.",
     "type": "library",
-    "keywords": ["soap", "wsdl", "service", "web", "uup", "bmc"],
+    "keywords": ["soap", "wsdl", "service", "web", "uup"],
     "homepage": "https://nowise.se/oss/uup/soap",
     "license": "Apache-2.0",
     "authors": [
