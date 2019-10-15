@@ -10,9 +10,15 @@ wsdl:documentation tags.
 * Generates web service description (WSDL).
 * Generates web service API documentation (HTML).
 
+### HOMEPAGE:
+
+Visit project homepage for more information and extended examples:
+
+* https://nowise.se/oss/uup/soap/
+
 ### INTRODUCTION:
 
-The exported service is either the class name or an object. The latter is is prefered in
+The exported service uses either the class name or an object. The latter is is prefered in
 case some special initialization has to be done. The parameter processing (i.e. detect if
 WSDL mode) can be simplified by using the SOAP request class:
 
